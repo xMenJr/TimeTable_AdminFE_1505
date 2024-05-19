@@ -1,205 +1,205 @@
 function login() {
-  const loginUrl = "https://localhost:7013/api/Users/SignIn";
-  const username = document.getElementById("name-login").value;
-  const password = document.getElementById("password").value;
-  fetch(loginUrl, {
-      method: "POST",
-      headers: {
-      "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      email: username,
-      passWordHas: password,
-      }),
-  })
-  .then((response) => {
-      if (!response.ok) {
-        alert("Đăng nhập không thành công.\nVui lòng kiểm tra lại tài khoản và mật khẩu");
-      throw new Error("Đăng nhập không thành công.");
-      }
-      return response.json();
-  })
-  .then((data) => {
-    if(data.token === "Tên đăng nhập hoặc mật khẩu không đúng" || data.token === "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin để mở") {
-        alert(data.token);
-    }
-    else {
-        // Xử lý dữ liệu trả về từ API
-        // console.log(data);
-        // const setjson=JSON.stringify(data);
-        
-        localStorage.setItem("login",data.token);
-        // Thực hiện các hành động khác sau khi đăng nhập thành công
-        const namelogin = data.name;
-        localStorage.setItem("fullname",namelogin);
-        localStorage.setItem("email",data.email);
-        localStorage.setItem("avata",data.avata);
-        if(data.status === "Thành công") {
-            window.location.href = "main_admin.html";
-        }
-        else {
-            alert(data.token);
-        }
-    }
+    const loginUrl = "https://localhost:7013/api/Users/SignIn";
+    const username = document.getElementById("name-login").value;
+    const password = document.getElementById("password").value;
+    fetch(loginUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: username,
+            passWordHas: password,
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Đăng nhập không thành công.\nVui lòng kiểm tra lại tài khoản và mật khẩu");
+                throw new Error("Đăng nhập không thành công.");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.token === "Tên đăng nhập hoặc mật khẩu không đúng" || data.token === "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin để mở") {
+                alert(data.token);
+            }
+            else {
+                // Xử lý dữ liệu trả về từ API
+                // console.log(data);
+                // const setjson=JSON.stringify(data);
 
-      // localStorage.removeItem("signin");
-  })
-  .catch((error) => {
-      // Xử lý lỗi
-      console.error(error);
-  });
+                localStorage.setItem("login", data.token);
+                // Thực hiện các hành động khác sau khi đăng nhập thành công
+                const namelogin = data.name;
+                localStorage.setItem("fullname", namelogin);
+                localStorage.setItem("email", data.email);
+                localStorage.setItem("avata", data.avata);
+                if (data.status === "Thành công") {
+                    window.location.href = "main_admin.html";
+                }
+                else {
+                    alert(data.token);
+                }
+            }
+
+            // localStorage.removeItem("signin");
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 // sign up
 function signin() {
-  const signinUrl = "https://localhost:7013/api/Users/SignUp";
-  const email = document.getElementById("account").value;
-  const password = document.getElementById("password").value;
-  const confirmpassword = document.getElementById("confirmPassWord").value;
-  const firstname = document.getElementById("first__name").value;
-  const lastname = document.getElementById("last__name").value;
-  const dateofbirth = document.getElementById("birth").value;
-  var genderRadioButtons = document.getElementsByName("gender");
-  var genderValue;
-  for (var i = 0; i < genderRadioButtons.length; i++) {
+    const signinUrl = "https://localhost:7013/api/Users/SignUp";
+    const email = document.getElementById("account").value;
+    const password = document.getElementById("password").value;
+    const confirmpassword = document.getElementById("confirmPassWord").value;
+    const firstname = document.getElementById("first__name").value;
+    const lastname = document.getElementById("last__name").value;
+    const dateofbirth = document.getElementById("birth").value;
+    var genderRadioButtons = document.getElementsByName("gender");
+    var genderValue;
+    for (var i = 0; i < genderRadioButtons.length; i++) {
         if (genderRadioButtons[i].checked) {
-          var selectedGender = genderRadioButtons[i].value;
-          genderValue = (selectedGender === "Nam") ? "1" : "0";
+            var selectedGender = genderRadioButtons[i].value;
+            genderValue = (selectedGender === "Nam") ? "1" : "0";
         }
-  }
-  let typeAccount = document.getElementById("type__account").value;
-  if(typeAccount === 1){
-    typeAccount = "CH";
-  }
-  else {
-    typeAccount = "TG";
-  }
-  const numberphone = document.getElementById("phonenumber").value;
-  var avata = document.getElementById("avata").value;
-  if (genderValue === "0" && (!avata || avata === "")) {
-    avata = "https://img.freepik.com/premium-vector/female-user-profile-avatar-is-woman-character-screen-saver-with-emotions_505620-617.jpg?w=2000";
-  } else if (genderValue === "1" && (!avata || avata === "")) {
-    avata = "https://e7.pngegg.com/pngimages/348/800/png-clipart-man-wearing-blue-shirt-illustration-computer-icons-avatar-user-login-avatar-blue-child.png";
-  }
-  fetch(signinUrl, {
-      method: "POST",
-      headers: {
-      "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName:firstname,
-        lastName:lastname,
-        email: email,
-        phoneNumber: numberphone,
-        password: password,
-        confirmPassword: confirmpassword,
-        typeAccount: typeAccount,
-        gender: genderValue,
-        dateOfBirth: dateofbirth,
-        avata: avata
-      }),
-  })
-  .then((response) => {
-      if (!response.ok) {
-      alert("Đăng ký không thành công.\nVui long kiểm tra lại")
-      throw new Error("Đăng ký không thành công.");
-      }
-      return response.json();
-  })
-  .then((data) => {
-      // Xử lý dữ liệu trả về từ API
-      alert(data.status);
-      window,location.href = "index.html";
-      // alert(data.result);
+    }
+    let typeAccount = document.getElementById("type__account").value;
+    if (typeAccount === 1) {
+        typeAccount = "CH";
+    }
+    else {
+        typeAccount = "TG";
+    }
+    const numberphone = document.getElementById("phonenumber").value;
+    var avata = document.getElementById("avata").value;
+    if (genderValue === "0" && (!avata || avata === "")) {
+        avata = "https://img.freepik.com/premium-vector/female-user-profile-avatar-is-woman-character-screen-saver-with-emotions_505620-617.jpg?w=2000";
+    } else if (genderValue === "1" && (!avata || avata === "")) {
+        avata = "https://e7.pngegg.com/pngimages/348/800/png-clipart-man-wearing-blue-shirt-illustration-computer-icons-avatar-user-login-avatar-blue-child.png";
+    }
+    fetch(signinUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            firstName: firstname,
+            lastName: lastname,
+            email: email,
+            phoneNumber: numberphone,
+            password: password,
+            confirmPassword: confirmpassword,
+            typeAccount: typeAccount,
+            gender: genderValue,
+            dateOfBirth: dateofbirth,
+            avata: avata
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Đăng ký không thành công.\nVui long kiểm tra lại")
+                throw new Error("Đăng ký không thành công.");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            // Xử lý dữ liệu trả về từ API
+            alert(data.status);
+            window, location.href = "index.html";
+            // alert(data.result);
 
-  })
-  .catch((error) => {
-      // Xử lý lỗi
-      console.error(error);
-  });
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 function DeleteLocalStorage() {
-  localStorage.removeItem("fullname");
-  localStorage.removeItem("avata");
-  localStorage.removeItem("login");
-  localStorage.removeItem("dateofbirth");
-  localStorage.removeItem("email");
-  localStorage.removeItem("username");
-  localStorage.removeItem("gender");
+    localStorage.removeItem("fullname");
+    localStorage.removeItem("avata");
+    localStorage.removeItem("login");
+    localStorage.removeItem("dateofbirth");
+    localStorage.removeItem("email");
+    localStorage.removeItem("username");
+    localStorage.removeItem("gender");
 }
 
 function getInformation() {
-  const getInforUrl = "https://localhost:7013/api/Users/Info";
+    const getInforUrl = "https://localhost:7013/api/Users/Info";
 
-  fetch(`${getInforUrl}?email=${localStorage.getItem("email")}`, {
-      method: "GET",
-      headers: {
-          "Content-Type": "application/json",
-      },
-  })
-  .then((response) => {
-      if (!response.ok) {
-          throw new Error("Lỗi khi gọi API");
-      }
-      return response.json();
-  })
-  .then((data) => {
-    localStorage.setItem("username", data.email);
-    localStorage.setItem("fullname", data.userName);
-    const dateObject = new Date(data.dateOfBirth);
-
-    const day = dateObject.getDate();
-    const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
-    const year = dateObject.getFullYear();
-    
-    const formattedDate = `${day}-${month}-${year}`;
-    localStorage.setItem("dateofbirth", formattedDate);
-    localStorage.setItem("gender", data.gender === 1 ? "Nữ" : "Nam");
-
-    // Lấy tên đăng nhập từ localStorage
-    const username = localStorage.getItem("email");
-    const dateofbirth = localStorage.getItem("dateofbirth");
-    const gender = localStorage.getItem("gender");
-    // Hiển thị tên đăng nhập
-    const nameLogin = document.getElementById("account__infor--username__input"); 
-    const FullName = document.getElementById("account__infor--fullname__input"); 
-    const DateOfBirth = document.getElementById("infor__list--birth__input"); 
-    const Gender = document.getElementById("infor__list--gender__input"); 
-    // Change infor
-    const changeFirstName = document.getElementById("Change__firstName"); 
-    const changeLastName = document.getElementById("Change_lastName"); 
-    const changeDateOfBirth = document.getElementById("Change__dateOfBirth"); 
-    const changeGender = document.getElementById("Change__gender"); 
-    const changeAvata = document.getElementById("Change_avata"); 
-    // get: Insert data to Input
-    nameLogin.value = username; 
-    FullName.value = fullname;
-    DateOfBirth.value = dateofbirth;
-    Gender.value = gender;
-
-    //Change: Insert data to input 
-    changeFirstName.value = data.firstName;
-    changeLastName.value = data.lastName
-    changeDateOfBirth.value = dateofbirth;
-    changeGender.value = gender;
-    changeAvata.value = localStorage.getItem("avata");
+    fetch(`${getInforUrl}?email=${localStorage.getItem("email")}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
     })
-  .catch((error) => {
-      // Xử lý lỗi
-      console.error(error);
-  });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            localStorage.setItem("username", data.email);
+            localStorage.setItem("fullname", data.userName);
+            const dateObject = new Date(data.dateOfBirth);
+
+            const day = dateObject.getDate();
+            const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
+            const year = dateObject.getFullYear();
+
+            const formattedDate = `${day}-${month}-${year}`;
+            localStorage.setItem("dateofbirth", formattedDate);
+            localStorage.setItem("gender", data.gender === 1 ? "Nữ" : "Nam");
+
+            // Lấy tên đăng nhập từ localStorage
+            const username = localStorage.getItem("email");
+            const dateofbirth = localStorage.getItem("dateofbirth");
+            const gender = localStorage.getItem("gender");
+            // Hiển thị tên đăng nhập
+            const nameLogin = document.getElementById("account__infor--username__input");
+            const FullName = document.getElementById("account__infor--fullname__input");
+            const DateOfBirth = document.getElementById("infor__list--birth__input");
+            const Gender = document.getElementById("infor__list--gender__input");
+            // Change infor
+            const changeFirstName = document.getElementById("Change__firstName");
+            const changeLastName = document.getElementById("Change_lastName");
+            const changeDateOfBirth = document.getElementById("Change__dateOfBirth");
+            const changeGender = document.getElementById("Change__gender");
+            const changeAvata = document.getElementById("Change_avata");
+            // get: Insert data to Input
+            nameLogin.value = username;
+            FullName.value = fullname;
+            DateOfBirth.value = dateofbirth;
+            Gender.value = gender;
+
+            //Change: Insert data to input 
+            changeFirstName.value = data.firstName;
+            changeLastName.value = data.lastName
+            changeDateOfBirth.value = dateofbirth;
+            changeGender.value = gender;
+            changeAvata.value = localStorage.getItem("avata");
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 function ChangeInformation() {
     const changeInforUrl = "https://localhost:7013/api/EditAccount";
-    const changeFirstName = document.getElementById("Change__firstName").value; 
-    const changeLastName = document.getElementById("Change_lastName").value; 
-    const changeDateOfBirth = document.getElementById("Change__dateOfBirth").value; 
-    const changeGenderInput = document.getElementById("Change__gender"); 
-    const changeAvata = document.getElementById("Change_avata").value; 
+    const changeFirstName = document.getElementById("Change__firstName").value;
+    const changeLastName = document.getElementById("Change_lastName").value;
+    const changeDateOfBirth = document.getElementById("Change__dateOfBirth").value;
+    const changeGenderInput = document.getElementById("Change__gender");
+    const changeAvata = document.getElementById("Change_avata").value;
     let changeGender = changeGenderInput.value.toUpperCase(); // Chuyển đổi thành chữ in hoa
-  
+
     if (changeGender === "NAM") {
         changeGender = 1;
     }
@@ -209,92 +209,92 @@ function ChangeInformation() {
     else {
         changeGender = 0;
     }
-  
+
     var parts = changeDateOfBirth.split('-'); // Tách ngày, tháng và năm thành mảng
-  
+
     if (parts.length !== 3) {
         return "Ngày không hợp lệ";
     }
-  
+
     var ngay = parts[0];
     var thang = parts[1];
     var nam = parts[2];
-  
+
     var ngayMoi = nam + '-' + thang.padStart(2, '0') + '-' + ngay.padStart(2, '0');
-      // Gửi request fetch
+    // Gửi request fetch
     fetch(`${changeInforUrl}?token=${localStorage.getItem("login")}`, {
-    method: "PUT",
-    headers: {
-        "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
-    },
-    body: JSON.stringify({
-        firstName: changeFirstName,
-        lastName: changeLastName,
-        email: "string",
-        numberPhone: 0,
-        gender: changeGender,
-        dateOfBirth: ngayMoi,
-        avata: changeAvata, 
-        usedStated: 0,
-        description: "",
-    }),
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
+        },
+        body: JSON.stringify({
+            firstName: changeFirstName,
+            lastName: changeLastName,
+            email: "string",
+            numberPhone: 0,
+            gender: changeGender,
+            dateOfBirth: ngayMoi,
+            avata: changeAvata,
+            usedStated: 0,
+            description: "",
+        }),
     })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
-    }
-    return response.json();
-    })
-    .then((data) => {
-    alert(data.result);
-    })
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
-    
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            alert(data.result);
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
+
 }
-  
+
 
 
 function ChangePassword() {
     const changeInforUrl = "https://localhost:7013/api/ChangerPassWord";
-    const password__old = document.getElementById("password__old").value; 
-    const password__new = document.getElementById("password__new").value; 
-    const confirm__password = document.getElementById("confirm__password--new").value; 
+    const password__old = document.getElementById("password__old").value;
+    const password__new = document.getElementById("password__new").value;
+    const confirm__password = document.getElementById("confirm__password--new").value;
     fetch(`${changeInforUrl}?token=${localStorage.getItem("login")}`, {
         method: "PUT",
         headers: {
-        "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          passWordHas: password__old,
-          newPassword: password__new,
-          confirmNewPassword: confirm__password
+            passWordHas: password__old,
+            newPassword: password__new,
+            confirmNewPassword: confirm__password
         }),
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error("Lỗi khi gọi API");
-        }
-        return response.json();
-    })
-    .then((data) => {
-        alert(data.status);
-    })
-    .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            alert(data.status);
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 function GetAccountManager() {
     const changeInforUrl = "https://localhost:7013/api/UserManager";
-    const accountManager = document.getElementById("account__manager"); 
+    const accountManager = document.getElementById("account__manager");
     fetch(changeInforUrl, {
         method: "GET",
         headers: {
-        "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         // body: JSON.stringify({
         //   passWordHas: password__old,
@@ -302,35 +302,35 @@ function GetAccountManager() {
         //   confirmNewPassword: confirm__password
         // }),
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error("Lỗi khi gọi API");
-        }
-        return response.json();
-    })
-    .then((data) => {
-        // alert(data.status);
-        data.forEach(item => {
-            alert(item);
-            const divElement = document.createElement('div');
-            divElement.textContent = item;
-            accountManager.appendChild(divElement);
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            // alert(data.status);
+            data.forEach(item => {
+                alert(item);
+                const divElement = document.createElement('div');
+                divElement.textContent = item;
+                accountManager.appendChild(divElement);
+            });
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
         });
-    })
-    .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
-    });
 }
 
 let dataLoaded = false;
-let tableBody = null; 
+let tableBody = null;
 let pageIndexManagerAccount = 1;
 
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberManagerAccount() {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/UserManager?pageIndex=${1}&pageSize=${9999}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
@@ -387,7 +387,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
     var ManagerSubject = document.getElementById("dataContainer__subject");
     var subjectIcon = document.getElementById("Subject__icon");
     var subjectText = document.getElementById("Subject__text");
-    if(SearchTableManagerAccount.style.display === "none") {
+    if (SearchTableManagerAccount.style.display === "none") {
         // HIển thị
         ManagerDisplay.style.display = "block";
         SearchTableManagerAccount.style.display = "block";
@@ -406,10 +406,10 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
 
         // Đổi màu
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
         managerClassRoomText.style.color = "#fff";
         managerClassRoomIcon.style.color = "#fff";
@@ -420,7 +420,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
         textColorSchedule.style.color = "#fff";
         iconDownSchedule.style.color = "#fff";
         //set color manager account
-        colorTextManagerAccount__Icon.style.color = "#33b5e5" ;
+        colorTextManagerAccount__Icon.style.color = "#33b5e5";
         SearchTableManagerAccount.style.display = "none";
         colorTextManagerAccount.style.color = "#33b5e5";
         managerAcountIcon.style.color = "#31B1DB";
@@ -444,10 +444,10 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
         tableScheduleUnRegister.style.display = "none";
         // Đổi màu
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
         managerClassRoomText.style.color = "#fff";
         managerClassRoomIcon.style.color = "#fff";
@@ -457,7 +457,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
         iconDownSchedule.style.color = "#fff";
         //
         //set color manager account
-        colorTextManagerAccount__Icon.style.color = "#33b5e5" ;
+        colorTextManagerAccount__Icon.style.color = "#33b5e5";
         colorTextManagerAccount.style.color = "#33b5e5";
         managerAcountIcon.style.color = "#31B1DB";
         //
@@ -468,7 +468,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
         subjectIcon.style.color = "#fff";
         subjectText.style.color = "#fff";
     }
-    
+
     // 
     const ShowListAccount = document.getElementById('accountManager__list--user');
     // const tableClass = document.getElementById('select__subject--item');
@@ -505,7 +505,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
         tableBody = table.querySelector('tbody');
     }
     else {
-        tableBody.innerHTML = ''; 
+        tableBody.innerHTML = '';
     }
 
     tableBody.innerHTML = '';
@@ -522,7 +522,7 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
             <td>${item.fullName}</td>
             <td>${item.email}</td>
             <td>0${item.phone}</td>
-            <td>${item.type === "TG"?"Thỉnh giảng" : "Cơ hữu"}</td>
+            <td>${item.type === "TG" ? "Thỉnh giảng" : "Cơ hữu"}</td>
             <td>${formattedDate}</td>
             <td>${item.gender === 1 ? "Nam" : "Nữ"}</td>
             <td>${item.usedState === 0 ? "Đang mở" : "Tạm khóa"}</td>
@@ -552,25 +552,25 @@ function displayDataAndPaginationManagerAccount(data, currentPage) {
     // fetchApiWithPageNumberManagerAccount()
 
     // Tạo và gắn sự kiện cho các nút phân trang
-//     const paginationContainer = document.createElement("div");
-//     paginationContainer.style.margin = "20px 20px";
-//     paginationContainer.style.position = "absolute";
-//     paginationContainer.style.left = "50%";
+    //     const paginationContainer = document.createElement("div");
+    //     paginationContainer.style.margin = "20px 20px";
+    //     paginationContainer.style.position = "absolute";
+    //     paginationContainer.style.left = "50%";
 
-//     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
-//         const button = document.createElement("button");
-//         button.style.padding = "10px 10px";
-//         button.innerText = i;
+    //     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
+    //         const button = document.createElement("button");
+    //         button.style.padding = "10px 10px";
+    //         button.innerText = i;
 
-//         button.addEventListener("click", () => {
-//             pageIndexManagerAccount = i;
-//             fetchApiWithPageNumberManagerAccount(pageIndexManagerAccount);
-//         });
+    //         button.addEventListener("click", () => {
+    //             pageIndexManagerAccount = i;
+    //             fetchApiWithPageNumberManagerAccount(pageIndexManagerAccount);
+    //         });
 
-//         paginationContainer.appendChild(button);
-//     }
+    //         paginationContainer.appendChild(button);
+    //     }
 
-//     tableBody.appendChild(paginationContainer);
+    //     tableBody.appendChild(paginationContainer);
 }
 
 // Hàm gọi API ban đầu và hiển thị dữ liệu
@@ -589,13 +589,13 @@ async function GetAllManagerAccountForSchedule(pageIndex) {
 // Search Account
 
 let dataLoaded__search = false;
-let tableBody__search = null; 
+let tableBody__search = null;
 let pageIndexSearchAccount = 1;
 
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberSearchAccount(pageNumber, userId) {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/UserManager/Id?id=${userId}&pageIndex=${1}&pageSize=${9999}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
@@ -612,7 +612,7 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
     const userId = document.getElementById("accountManager__search--name").value;
     //
     const dataContainer = document.getElementById('table__Account--item');
-    
+
     const ShowListAccount = document.getElementById('accountManager__list--user');
     //Hiển thị
     var information = document.getElementById("information");
@@ -644,7 +644,7 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
     var ManagerSubject = document.getElementById("dataContainer__subject");
     var subjectIcon = document.getElementById("Subject__icon");
     var subjectText = document.getElementById("Subject__text");
-    if(ListAccountManager.style.display === "block") {
+    if (ListAccountManager.style.display === "block") {
         // HIển thị
         ManagerDisplay.style.display = "block";
         // Tắt hiển thị
@@ -658,13 +658,13 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
 
         // Đổi màu
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
         //set color manager account
-        colorTextManagerAccount__Icon.style.color = "#33b5e5" ;
+        colorTextManagerAccount__Icon.style.color = "#33b5e5";
         colorTextManagerAccount.style.color = "#33b5e5";
         //
         ManagerSubject.style.display = "none";
@@ -684,13 +684,13 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
 
         // Đổi màu
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
         //set color manager account
-        colorTextManagerAccount__Icon.style.color = "#33b5e5" ;
+        colorTextManagerAccount__Icon.style.color = "#33b5e5";
         colorTextManagerAccount.style.color = "#33b5e5";
         //
         ManagerSubject.style.display = "none";
@@ -722,19 +722,19 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
         tableBody__search = table.querySelector('tbody');
     }
     else {
-        tableBody__search.innerHTML = ''; 
+        tableBody__search.innerHTML = '';
     }
 
     tableBody__search.innerHTML = '';
     var stt = 1;
     data.result.forEach(item => {
-    const dateObject = new Date(item.dateOfBirth);
-    const day = dateObject.getDate();
-    const month = dateObject.getMonth() + 1;
-    const year = dateObject.getFullYear();
-    const formattedDate = `${day}-${month}-${year}`;
-    const row = document.createElement('tr');
-    row.innerHTML = `
+        const dateObject = new Date(item.dateOfBirth);
+        const day = dateObject.getDate();
+        const month = dateObject.getMonth() + 1;
+        const year = dateObject.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+        const row = document.createElement('tr');
+        row.innerHTML = `
         <td>${stt}</td>
         <td>${item.fullName}</td>
         <td>${item.email}</td>
@@ -791,7 +791,7 @@ function displayDataAndPaginationSearchAccount(data, currentPage) {
 async function GetAllSearchAccountForSchedule(pageIndex) {
     const userId = document.getElementById("accountManager__search--name").value;
     // Gọi API ban đầu với số trang pageIndex
-    if(userId === "") {
+    if (userId === "") {
         if (!dataLoaded) {
             await fetchApiWithPageNumberManagerAccount(pageIndex);
             dataLoaded = true;
@@ -809,22 +809,22 @@ async function GetAllSearchAccountForSchedule(pageIndex) {
             await fetchApiWithPageNumberSearchAccount(pageIndex, userId);
         }
     }
-    
+
 }
 
 
 // Admin sửa thông tin tài khoản
 function ShowChangeInforUser(itemId) {
     const getInforUser = "https://localhost:7013/api/UserManager/Id";
-    const changeFirstName = document.getElementById("Change__firstName--admin"); 
-    const changeLastName = document.getElementById("Change_lastName--admin"); 
-    const changeEmail = document.getElementById("Change_Email--admin"); 
-    const changePhoneNumber = document.getElementById("Change_numberphone--admin"); 
-    const changeDateOfBirth = document.getElementById("Change__dateOfBirth--admin"); 
-    const changeGender = document.getElementById("Change__gender--admin"); 
-    const changeAvata = document.getElementById("Change_avata--admin"); 
-    const ShowAdminChangeUser = document.getElementById("Admin__change--user"); 
-    if(ShowAdminChangeUser.style.display === "none") {
+    const changeFirstName = document.getElementById("Change__firstName--admin");
+    const changeLastName = document.getElementById("Change_lastName--admin");
+    const changeEmail = document.getElementById("Change_Email--admin");
+    const changePhoneNumber = document.getElementById("Change_numberphone--admin");
+    const changeDateOfBirth = document.getElementById("Change__dateOfBirth--admin");
+    const changeGender = document.getElementById("Change__gender--admin");
+    const changeAvata = document.getElementById("Change_avata--admin");
+    const ShowAdminChangeUser = document.getElementById("Admin__change--user");
+    if (ShowAdminChangeUser.style.display === "none") {
         ShowAdminChangeUser.style.display = "block";
     }
     else {
@@ -836,21 +836,21 @@ function ShowChangeInforUser(itemId) {
         headers: {
             "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
         },
-        })
+    })
         .then((response) => {
-        if (!response.ok) {
-            throw new Error("Lỗi khi gọi API");
-        }
-        return response.json();
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
         })
         .then((data) => {
-            data.result.forEach(item => { 
+            data.result.forEach(item => {
                 const dateObject = new Date(item.dateOfBirth);
                 localStorage.setItem("IdUser", itemId);
                 const day = dateObject.getDate();
                 const month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
                 const year = dateObject.getFullYear();
-                if(item.gender === 1) {
+                if (item.gender === 1) {
                     item.gender = "Nam";
                 }
                 else item.gender = "Nữ";
@@ -858,29 +858,29 @@ function ShowChangeInforUser(itemId) {
                 changeFirstName.value = item.firstName;
                 changeLastName.value = item.lastName;
                 changeEmail.value = item.email;
-                changePhoneNumber.value = "0" +item.phone;
+                changePhoneNumber.value = "0" + item.phone;
                 changeDateOfBirth.value = formattedDate;
                 changeGender.value = item.gender;
                 changeAvata.value = item.avata;
             })
-            
+
         })
         .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
-    });
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 function AdminChangeInforUser() {
     const changeInforUrl = "https://localhost:7013/api/EditAccount/Manager";
-    const changeFirstName = document.getElementById("Change__firstName--admin").value; 
-    const changeLastName = document.getElementById("Change_lastName--admin").value; 
-    const changeEmail = document.getElementById("Change_Email--admin").value; 
-    const changePhoneNumber = document.getElementById("Change_numberphone--admin").value; 
-    const changeDateOfBirth = document.getElementById("Change__dateOfBirth--admin").value; 
-    const changeGenderInput = document.getElementById("Change__gender--admin"); 
-    const changeAvata = document.getElementById("Change_avata--admin").value; 
-    const ShowAdminChangeUser = document.getElementById("Admin__change--user"); 
+    const changeFirstName = document.getElementById("Change__firstName--admin").value;
+    const changeLastName = document.getElementById("Change_lastName--admin").value;
+    const changeEmail = document.getElementById("Change_Email--admin").value;
+    const changePhoneNumber = document.getElementById("Change_numberphone--admin").value;
+    const changeDateOfBirth = document.getElementById("Change__dateOfBirth--admin").value;
+    const changeGenderInput = document.getElementById("Change__gender--admin");
+    const changeAvata = document.getElementById("Change_avata--admin").value;
+    const ShowAdminChangeUser = document.getElementById("Admin__change--user");
     const id = localStorage.getItem("IdUser");
     let changeGender = changeGenderInput.value.toUpperCase();
     if (changeGender === "NAM") {
@@ -893,58 +893,58 @@ function AdminChangeInforUser() {
         changeGender = 3;
     }
     var parts = changeDateOfBirth.split('-'); // Tách ngày, tháng và năm thành mảng
-  
-        if (parts.length !== 3) {
-            return "Ngày không hợp lệ";
-        }
-    
-        var ngay = parts[0];
-        var thang = parts[1];
-        var nam = parts[2];
-    
-        var ngayMoi = nam + '-' + thang.padStart(2, '0') + '-' + ngay.padStart(2, '0');
-      // Gửi request change infor user
-    fetch(`${changeInforUrl}?id=${id}&token=${localStorage.getItem("login")}`, {
-    method: "PUT",
-    headers: {
-        "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
-    },
-    body: JSON.stringify({
-        firstName: changeFirstName,
-        lastName: changeLastName,
-        email: changeEmail,
-        numberPhone: changePhoneNumber,
-        gender: changeGender,
-        dateOfBirth: ngayMoi,
-        avata: changeAvata, 
-        usedStated: 0,
-        description: "",
-    }),
-    })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
+
+    if (parts.length !== 3) {
+        return "Ngày không hợp lệ";
     }
-    return response.json();
+
+    var ngay = parts[0];
+    var thang = parts[1];
+    var nam = parts[2];
+
+    var ngayMoi = nam + '-' + thang.padStart(2, '0') + '-' + ngay.padStart(2, '0');
+    // Gửi request change infor user
+    fetch(`${changeInforUrl}?id=${id}&token=${localStorage.getItem("login")}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
+        },
+        body: JSON.stringify({
+            firstName: changeFirstName,
+            lastName: changeLastName,
+            email: changeEmail,
+            numberPhone: changePhoneNumber,
+            gender: changeGender,
+            dateOfBirth: ngayMoi,
+            avata: changeAvata,
+            usedStated: 0,
+            description: "",
+        }),
     })
-    .then((data) => {
-        localStorage.removeItem("IdUser");
-        console.log(data);
-        if(data.statusCode === 200) {
-            alert("Sửa thành công");
-            if(ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
-            else ShowAdminChangeUser.style.display = "none";
-            GetAllSearchAccountForSchedule(1);
-        }
-        else {
-            alert("Sửa không thành công")
-        }
-    
-    })
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            localStorage.removeItem("IdUser");
+            console.log(data);
+            if (data.statusCode === 200) {
+                alert("Sửa thành công");
+                if (ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
+                else ShowAdminChangeUser.style.display = "none";
+                GetAllSearchAccountForSchedule(1);
+            }
+            else {
+                alert("Sửa không thành công")
+            }
+
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 
 function AdminDeleteUser(id) {
@@ -954,61 +954,61 @@ function AdminDeleteUser(id) {
         headers: {
             "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
         },
-        })
+    })
         .then((response) => {
-        if (!response.ok) {
-            throw new Error("Lỗi khi gọi API");
-        }
-        return response.json();
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
         })
         .then((data) => {
             localStorage.removeItem("IdUser");
-            if(data.statusCode === 200) {
+            if (data.statusCode === 200) {
                 alert(data.result);
                 GetAllSearchAccountForSchedule(1);
             }
             else {
                 alert("Sửa không thành công")
             }
-        
+
         })
         .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
+            // Xử lý lỗi
+            console.error(error);
         });
 }
 
 function AdminLockAccount(id) {
     const changeInforUrl = "https://localhost:7013/api/UserManager";
     var isConfirmed = confirm("Bạn có chắc chắn muốn khóa tài khoản này này?");
-    if(isConfirmed) {
+    if (isConfirmed) {
         fetch(`${changeInforUrl}?id=${id}&usedStated=${1}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
             },
-            })
+        })
             .then((response) => {
-            if (!response.ok) {
-                throw new Error("Lỗi khi gọi API");
-            }
-            return response.json();
+                if (!response.ok) {
+                    throw new Error("Lỗi khi gọi API");
+                }
+                return response.json();
             })
             .then((data) => {
                 localStorage.removeItem("IdUser");
-                if(data.statusCode === 200) {
+                if (data.statusCode === 200) {
                     alert("Khóa tài khoản thành công");
                     GetAllSearchAccountForSchedule(1);
                 }
                 else {
                     alert("Sửa không thành công")
                 }
-            
+
             })
             .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
     else {
         alert("Hành động đã bị hủy");
@@ -1018,35 +1018,35 @@ function AdminLockAccount(id) {
 function AdminUnLockAccount(id) {
     const changeInforUrl = "https://localhost:7013/api/UserManager";
     var isConfirmed = confirm("Bạn có chắc chắn muốn mở khóa tài khoản này?");
-    if(isConfirmed) {
+    if (isConfirmed) {
         fetch(`${changeInforUrl}?id=${id}&usedStated=${0}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
             },
-            })
+        })
             .then((response) => {
-            if (!response.ok) {
-                throw new Error("Lỗi khi gọi API");
-            }
-            return response.json();
+                if (!response.ok) {
+                    throw new Error("Lỗi khi gọi API");
+                }
+                return response.json();
             })
             .then((data) => {
                 localStorage.removeItem("IdUser");
                 console.log(data);
-                if(data.statusCode === 200) {
+                if (data.statusCode === 200) {
                     alert("Mở khóa tài khoản thành công");
                     GetAllSearchAccountForSchedule(1);
                 }
                 else {
                     alert("Sửa không thành công")
                 }
-            
+
             })
             .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
     else {
         alert("Hành động đã bị hủy");
@@ -1056,34 +1056,34 @@ function AdminUnLockAccount(id) {
 function AdminLockAccountType(typeAccount, usedState) {
     const changeInforUrl = "https://localhost:7013/api/UserManager/LoclAccount";
     var isConfirmed = confirm("Bạn có chắc chắn muốn khóa tài khoản này này?");
-    if(isConfirmed) {
+    if (isConfirmed) {
         fetch(`${changeInforUrl}?TypeAccount=${typeAccount}&UsedStated=${usedState}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
             },
-            })
+        })
             .then((response) => {
-            if (!response.ok) {
-                throw new Error("Lỗi khi gọi API");
-            }
-            return response.json();
+                if (!response.ok) {
+                    throw new Error("Lỗi khi gọi API");
+                }
+                return response.json();
             })
             .then((data) => {
                 localStorage.removeItem("IdUser");
-                if(data.statusCode === 200) {
+                if (data.statusCode === 200) {
                     alert("Khóa tài khoản thành công");
                     GetAllSearchAccountForSchedule(1);
                 }
                 else {
                     alert("Sửa không thành công")
                 }
-            
+
             })
             .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
     else {
         alert("Hành động đã bị hủy");
@@ -1092,21 +1092,21 @@ function AdminLockAccountType(typeAccount, usedState) {
 
 // class
 
-function showInforClass(){
+function showInforClass() {
     var managementClass = document.getElementById("management_class");
     var style = window.getComputedStyle(managementClass);
     var managementClassRoom = document.getElementById("management_classRoom");
     var updateClass = document.getElementById("update_class");
     var addClass = document.getElementById("add_class");
 
-    if(style.display === "none"){
+    if (style.display === "none") {
         managementClass.style.display = "block";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
         addClass.style.display = "none";
 
     }
-    else{
+    else {
         managementClass.style.display = "none";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
@@ -1114,7 +1114,7 @@ function showInforClass(){
     }
 }
 let dataLoaded__searchClass = false;
-let tableBody__searchClass = null; 
+let tableBody__searchClass = null;
 let pageIndexSearchClass = 1;
 
 async function GetAllManagerClass(pageIndex) {
@@ -1133,7 +1133,7 @@ async function fetchApiWithPageNumberManagerClass(pageNumber) {
         const getClassUrl = `https://localhost:7013/api/Class?pageIndex=${pageNumber}&pageSize=${9999}`;
         const response = await fetch(getClassUrl);
         const data = await response.json();
-       
+
         displayDataAndPaginationManagerClass(data, pageNumber);
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -1174,7 +1174,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
     var navbarSchedulingText = document.getElementById("chedulingText");
     var textColorSchedule = document.getElementById("showSchedule_text");
     var iconDownSchedule = document.getElementById("showSchedule_icon");
-    
+
     //
     var tableClass = document.getElementById("class_table_container");
     //Subject
@@ -1183,7 +1183,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
     var subjectText = document.getElementById("Subject__text");
 
     var DataNull = document.getElementById("ClassManager");
-    if(tableClass.style.display === "none"){
+    if (tableClass.style.display === "none") {
         //Hiển thị 
         managementClass.style.display = "block";
         tableClass.style.display = "block";
@@ -1218,7 +1218,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
         subjectIcon.style.color = "#fff";
         subjectText.style.color = "#fff";
     }
-    else{
+    else {
         managementClass.style.display = "block";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
@@ -1247,7 +1247,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
         textColorSchedule.style.color = "#fff";
         iconDownSchedule.style.color = "#fff";
         //
-       
+
         subjectIcon.style.color = "#fff";
         subjectText.style.color = "#fff";
     }
@@ -1256,9 +1256,8 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
         if (!Array.isArray(data.result) || data.result.length === 0) {
             DataNull.style.display = "block";
             showListClass.innerHTML = '<h1 id="Data__null">Không có dữ liệu</h1>';
-        } 
-        else 
-        {    
+        }
+        else {
             if (!tableBody__searchClass) {
                 DataNull.style.display = "none";
                 const table = document.createElement('table');
@@ -1281,19 +1280,19 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
                 dataContainer.appendChild(table);
                 tableBody__searchClass = table.querySelector('tbody');
             }
-        }  
+        }
         tableBody__searchClass.innerHTML = '';
         var stt = 1;
         data.result.forEach(item => {
             const dateCre = new Date(item.createDate);
             const dayCre = dateCre.getDate();
-            const monthCre = dateCre.getMonth()+1;
+            const monthCre = dateCre.getMonth() + 1;
             const yearCre = dateCre.getFullYear();
             const formatDateCre = `${dayCre}-${monthCre}-${yearCre}`;
 
             const dateCourse = new Date(item.year_Of_Admission);
             const dayCourse = dateCourse.getDate();
-            const monthCourse = dateCourse.getMonth()+1;
+            const monthCourse = dateCourse.getMonth() + 1;
             const yearCourse = dateCourse.getFullYear();
             const formatDateCourse = `${dayCourse}-${monthCourse}-${yearCourse}`;
 
@@ -1303,8 +1302,8 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
                 <td style ="width:5% ">${stt}</td>
                 <td style ="width:10%">${item.name}</td>
                 <td style ="width:10%">${formatDateCourse}</td>
-                <td style ="width:10%">${item.course === 'string'?'':item.course}</td>
-                <td style ="width:30%">${item.description === 'string'?'':item.description}</td>
+                <td style ="width:10%">${item.course === 'string' ? '' : item.course}</td>
+                <td style ="width:30%">${item.description === 'string' ? '' : item.description}</td>
                 <td style ="width:20%">${formatDateCre}</td>
                 <td style ="width:10%">
                     <div class="hover-container">
@@ -1321,7 +1320,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
             `;
             stt++;
             tableBody__searchClass.appendChild(row);
-        });     
+        });
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -1347,7 +1346,7 @@ function displayDataAndPaginationManagerClass(data, currentPage) {
     // tableBody__searchClass.appendChild(paginationContainer);
 }
 
-function showUpdateClassForm(idItem){
+function showUpdateClassForm(idItem) {
     var updateClass = document.getElementById("update_class");
     var updateClassForm = document.getElementById("class_infor--update");
     var style = window.getComputedStyle(updateClass);
@@ -1359,20 +1358,20 @@ function showUpdateClassForm(idItem){
     var newYearAdmission = document.getElementById("year_class--update");
     var newDesc = document.getElementById("desc_class--update");
     // display
-    if(style.display === "none"){
+    if (style.display === "none") {
         updateClass.style.display = "block";
         updateClassForm.style.display = "block"
         managementClass.style.display = "none";
     }
     // undisplay
-    else{
+    else {
         updateClassForm.style.display = "none";
         addClass.style.display = "none";
         managementClass.style.display = "none";
         updateClass.style.display = "none";
-       
+
     }
-    
+
     // fill data
     const getClassByIdUrl = `https://localhost:7013/api/Class/Id`;
     fetch(`${getClassByIdUrl}?id=${idItem}&pageIndex=${1}&pageSize=${1}`, {
@@ -1381,64 +1380,64 @@ function showUpdateClassForm(idItem){
             "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
         },
     })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
-    }
-    return response.json();
-    })
-    .then((data) => {
-        
-        if(data.statusCode === 200) {
-            // date to display
-            const className = data.result[0].name;
-            const classCourse = data.result[0].course;
-            const classYearDisplay = new Date(data.result[0].year_Of_Admission);
-            const dayUpdateDisPlay = classYearDisplay.getDate();
-            const monthUpdateDisPlay = classYearDisplay.getMonth()+1;
-            const yearUpdateDisPlay = classYearDisplay.getFullYear();
-            const formatDateUpdateDisPlay = `${dayUpdateDisPlay} - ${monthUpdateDisPlay} - ${yearUpdateDisPlay}`;
-            const classDesc = data.result[0].description;
-            
-            newName.value = className;
-            newCourse.value = classCourse;
-            newYearAdmission.value = formatDateUpdateDisPlay;
-            newDesc.value = classDesc;
-            
-        }
-        else {
-            alert("Sửa không thành công");
-        }
-                    
-        const token = localStorage.getItem("login");
-        buttonUpdate.addEventListener("click", () => {
-            updateDataClass(idItem, token);
-            
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+
+            if (data.statusCode === 200) {
+                // date to display
+                const className = data.result[0].name;
+                const classCourse = data.result[0].course;
+                const classYearDisplay = new Date(data.result[0].year_Of_Admission);
+                const dayUpdateDisPlay = classYearDisplay.getDate();
+                const monthUpdateDisPlay = classYearDisplay.getMonth() + 1;
+                const yearUpdateDisPlay = classYearDisplay.getFullYear();
+                const formatDateUpdateDisPlay = `${dayUpdateDisPlay} - ${monthUpdateDisPlay} - ${yearUpdateDisPlay}`;
+                const classDesc = data.result[0].description;
+
+                newName.value = className;
+                newCourse.value = classCourse;
+                newYearAdmission.value = formatDateUpdateDisPlay;
+                newDesc.value = classDesc;
+
+            }
+            else {
+                alert("Sửa không thành công");
+            }
+
+            const token = localStorage.getItem("login");
+            buttonUpdate.addEventListener("click", () => {
+                updateDataClass(idItem, token);
+
+            });
+
+        })
+
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
         });
-    
-    })
-    
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
 }
 // update data Class
-function updateDataClass(id,token){
+function updateDataClass(id, token) {
     // date to sent API
     //update data
     const newName = document.getElementById("name_class--update").value;
     const newCourse = document.getElementById("course_class--update").value || 'string';
     const newYearAdmission = document.getElementById("year_class--update").value;
     const newDesc = document.getElementById("desc_class--update").value || 'string';
-    
-    if(newName == "" ){
+
+    if (newName == "") {
         alert("Vui lòng không để trống tên lớp học");
     }
-    else if(newYearAdmission == ""){
+    else if (newYearAdmission == "") {
         alert("Vui lòng không để trống năm học");
     }
-  
+
     const parts = newYearAdmission.split('-').map(part => part.trim());
     let [day, month, year] = parts;
     // Bổ sung số 0 cho ngày và tháng 
@@ -1448,43 +1447,43 @@ function updateDataClass(id,token){
 
     const apiUrl = `https://localhost:7013/api/Class/Id?id=${id}&token=${token}`;
     fetch(apiUrl, {
-    method: 'PUT', // Sử dụng phương thức PUT để cập nhật dữ liệu
-    headers: {
-        'Content-Type': 'application/json',
-        // Các headers khác nếu cần thiết
-    },
-    
-    body: JSON.stringify({ // Dữ liệu cập nhật
-        nameClass: newName,
-        year_Of_Admission: formattedDate,
-        course: newCourse,
-        descriptionClass: newDesc,
-        
-    }), 
-    })
-    .then((result) => {
-        if (!result.ok) {
-        throw new Error('Lỗi khi gọi API');
-        }
-        return result.json();
-    })
-    .then((resultData) => {
-        if(resultData.statusCode === 200){
-            alert("Sửa thành công");
+        method: 'PUT', // Sử dụng phương thức PUT để cập nhật dữ liệu
+        headers: {
+            'Content-Type': 'application/json',
+            // Các headers khác nếu cần thiết
+        },
 
-        }
-        else {
-            alert("Sửa không thành công")
-        }
+        body: JSON.stringify({ // Dữ liệu cập nhật
+            nameClass: newName,
+            year_Of_Admission: formattedDate,
+            course: newCourse,
+            descriptionClass: newDesc,
+
+        }),
     })
-    .catch((error) => {
-        alert(error); // Gọi hàm callback với lỗi (nếu có)
-    });
+        .then((result) => {
+            if (!result.ok) {
+                throw new Error('Lỗi khi gọi API');
+            }
+            return result.json();
+        })
+        .then((resultData) => {
+            if (resultData.statusCode === 200) {
+                alert("Sửa thành công");
+
+            }
+            else {
+                alert("Sửa không thành công")
+            }
+        })
+        .catch((error) => {
+            alert(error); // Gọi hàm callback với lỗi (nếu có)
+        });
 
 }
-function deleteInforClass(id){
+function deleteInforClass(id) {
     const confirmDelete = confirm("Xác nhận xóa ?");
-    if(confirmDelete){
+    if (confirmDelete) {
         const apiUrl = `https://localhost:7013/api/Class?id=${id}`;
         fetch(apiUrl, {
             method: 'DELETE',
@@ -1492,32 +1491,32 @@ function deleteInforClass(id){
                 'Content-Type': 'application/json',
             },
         })
-        
-        .then((response) => {
-            if (!response.ok) {
-                alert('Xóa lớp học không thành công do đang được sử dụng');
-                throw new Error('Lỗi khi gọi API');
-                
-            }
-            return response.json();
-        })
-        .then((responseData) => {
-            if (responseData.statusCode === 200) {
-                // Xóa lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
-                alert('Lớp học đã được xóa thành công.');
-            } else {
-                // Xóa lớp học không thành công, xử lý lỗi nếu cần
-                alert('Xóa lớp học không thành công do');
-            }
-        })
-        
-        .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+
+            .then((response) => {
+                if (!response.ok) {
+                    alert('Xóa lớp học không thành công do đang được sử dụng');
+                    throw new Error('Lỗi khi gọi API');
+
+                }
+                return response.json();
+            })
+            .then((responseData) => {
+                if (responseData.statusCode === 200) {
+                    // Xóa lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
+                    alert('Lớp học đã được xóa thành công.');
+                } else {
+                    // Xóa lớp học không thành công, xử lý lỗi nếu cần
+                    alert('Xóa lớp học không thành công do');
+                }
+            })
+
+            .catch((error) => {
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
 }
-function showAddClassForm(){
+function showAddClassForm() {
     // display
     var addClass = document.getElementById("add_class");
     var addClassForm = document.getElementById("class_infor");
@@ -1528,30 +1527,30 @@ function showAddClassForm(){
     // button add
 
 
-    if(addClass.style.display === "none"){
+    if (addClass.style.display === "none") {
         addClass.style.display = "block";
         addClassForm.style.display = "block";
         managementClass.style.display = "none";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
     }
-    else{
+    else {
         addClassForm.style.display = "none";
         managementClass.style.display = "none";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
         addClass.style.display = "none";
     }
-   
+
 }
-function addDataForClass(){
+function addDataForClass() {
     // new data
     const newName = document.getElementById("name_class--add").value;
     const newCourse = document.getElementById("course_class--add").value;
     const newYearAdmission = document.getElementById("year_class--add").value;
     const newDesc = document.getElementById("desc_class--add").value;
-    
-    if(newName === "" || newCourse === "" || newYearAdmission === ""){
+
+    if (newName === "" || newCourse === "" || newYearAdmission === "") {
         alert("Vui lòng điền đủ thông tin lớp học");
     }
     const parts = newYearAdmission.split('-').map(part => part.trim());
@@ -1563,7 +1562,7 @@ function addDataForClass(){
 
     const token = localStorage.getItem("login");
     const addClassUrl = `https://localhost:7013/api/Class?token=${token}`;
-    
+
     fetch(addClassUrl, {
         method: 'POST',
         headers: {
@@ -1577,35 +1576,35 @@ function addDataForClass(){
             descriptionClass: newDesc,
         }), // Dữ liệu lớp học mới
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi gọi API');
-        }
-        return response.json();
-    })
-    .then((responseData) => {
-        if (responseData.statusCode === 200) {
-            // Thêm lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
-            alert('Lớp học đã được thêm thành công.');
-        } else {
-            // Thêm lớp học không thành công, xử lý lỗi nếu cần
-            alert('Thêm lớp học không thành công.');
-        }
-    })
-    .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
-    });
-}  
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Lỗi khi gọi API');
+            }
+            return response.json();
+        })
+        .then((responseData) => {
+            if (responseData.statusCode === 200) {
+                // Thêm lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
+                alert('Lớp học đã được thêm thành công.');
+            } else {
+                // Thêm lớp học không thành công, xử lý lỗi nếu cần
+                alert('Thêm lớp học không thành công.');
+            }
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
+}
 
 // search class
 let dataLoaded_searchClass = false;
-let tableBody_searchClass = null; 
+let tableBody_searchClass = null;
 let pageIndexManagersearchClass = 1;
 async function GetAllSearchDataClass(pageIndex) {
     const nameClassSearch = document.getElementById("seach_name_class").value;
     // Gọi API ban đầu với số trang pageIndex
-    if(nameClassSearch === "") {
+    if (nameClassSearch === "") {
         if (!dataLoaded_searchClass) {
             await fetchApiWithPageNumberManagerClass(pageIndex);
             dataLoaded_searchClass = true;
@@ -1623,11 +1622,11 @@ async function GetAllSearchDataClass(pageIndex) {
             await fetchApiWithPageNumberSearchClass(pageIndex, nameClassSearch);
         }
     }
-    
+
 }
 async function fetchApiWithPageNumberSearchClass(pageNumber, nameClassSearch) {
     try {
-        
+
         const getClassSearchUrl = `https://localhost:7013/api/Class/Id?id=${nameClassSearch}&pageIndex=${pageNumber}&pageSize=${10}`;
         const response = await fetch(getClassSearchUrl);
         const data = await response.json();
@@ -1639,7 +1638,7 @@ async function fetchApiWithPageNumberSearchClass(pageNumber, nameClassSearch) {
 }
 
 // classRoom
-function showInforClassRoom(){
+function showInforClassRoom() {
     var managementClassRoom = document.getElementById("management_classRoom");
     var updateClassRoomForm = document.getElementById("classRoom_infor");
     var updateClassRoom = document.getElementById("update_classRoom");
@@ -1650,7 +1649,7 @@ function showInforClassRoom(){
     var addClassRoom = document.getElementById("add_classRoom");
     var addClassRoomForm = document.getElementById("classRoom_infor--add");
 
-    if(style.display === "none"){
+    if (style.display === "none") {
         managementClassRoom.style.display = "block";
         updateClassRoomForm.style.display = "none";
         managementClass.style.display = "none";
@@ -1660,7 +1659,7 @@ function showInforClassRoom(){
         addClassRoom.style.display = "none"
         addClassRoomForm.style.display = "none";
     }
-    else{
+    else {
         updateClassRoomForm.style.display = "none";
         managementClassRoom.style.display = "none";
         managementClass.style.display = "none";
@@ -1672,7 +1671,7 @@ function showInforClassRoom(){
     }
 }
 let dataLoaded__searchClassRoom = false;
-let tableBody__searchClassRoom = null; 
+let tableBody__searchClassRoom = null;
 let pageIndexSearchClassRoom = 1;
 
 async function GetAllManagerClassRoom(pageIndex) {
@@ -1691,7 +1690,7 @@ async function fetchApiWithPageNumberManagerClassRoom(pageNumber) {
         const getClassUrl = `https://localhost:7013/api/ClassRoom?pageIndex=${pageNumber}&pageSize=${9999}`;
         const response = await fetch(getClassUrl);
         const data = await response.json();
-       
+
         displayDataAndPaginationManagerClassRoom(data, pageNumber);
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -1719,7 +1718,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
     var tableScheduleRegister = document.getElementById("Registered_Schedule_table_container");
     var tableScheduleUnRegister = document.getElementById("UnRegister_Schedule_table_container");
     var ManagerSubject = document.getElementById("dataContainer__subject");
-    
+
     // đổi màu
     var textColorManagerClassRoom = document.getElementById("managerClassRoom__Text");
     var iconColorManagerClassRoom = document.getElementById("managerClassRoom__Icon");
@@ -1740,7 +1739,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
 
     //
     var DataNull = document.getElementById("ClassRoomManager");
-    if(tableClassRoom.style.display === "none"){
+    if (tableClassRoom.style.display === "none") {
         managementClassRoom.style.display = "block";
         tableClassRoom.style.display = "block";
         managementClass.style.display = "none";
@@ -1760,12 +1759,12 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
         textColorManagerClassRoom.style.color = "#31B1DB";
         iconColorManagerClassRoom.style.color = "#31B1DB";
         //mặc định
-        textColorManagerClass.style.color ="#fff";
-        iconDownClass.style.color ="#fff";
+        textColorManagerClass.style.color = "#fff";
+        iconDownClass.style.color = "#fff";
         textColorManagerAccount.style.color = "#fff";
-        iconColorManagerAccount.style.color =  "#fff";
-        informationListText.style.color =  "#fff";
-        informationListIcon.style.color =  "#fff";
+        iconColorManagerAccount.style.color = "#fff";
+        informationListText.style.color = "#fff";
+        informationListIcon.style.color = "#fff";
         navbarSchedulingIcon.style.color = "#fff";
         navbarSchedulingText.style.color = "#fff";
         textColorSchedule.style.color = "#fff";
@@ -1773,7 +1772,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
         subjectIcon.style.color = "#fff";
         subjectText.style.color = "#fff";
     }
-    else{
+    else {
         managementClassRoom.style.display = "block";
         tableClassRoom.style.display = "block";
         managementClass.style.display = "none";
@@ -1792,12 +1791,12 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
 
         textColorManagerClassRoom.style.color = "#31B1DB";
         iconColorManagerClassRoom.style.color = "#31B1DB";
-        textColorManagerClass.style.color ="#fff";
-        iconDownClass.style.color ="#fff";
+        textColorManagerClass.style.color = "#fff";
+        iconDownClass.style.color = "#fff";
         textColorManagerAccount.style.color = "#fff";
-        iconColorManagerAccount.style.color =  "#fff";
-        informationListText.style.color =  "#fff";
-        informationListIcon.style.color =  "#fff";
+        iconColorManagerAccount.style.color = "#fff";
+        informationListText.style.color = "#fff";
+        informationListIcon.style.color = "#fff";
         textColorSchedule.style.color = "#fff";
         iconDownSchedule.style.color = "#fff";
         subjectIcon.style.color = "#fff";
@@ -1808,9 +1807,8 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
         if (!Array.isArray(data.result) || data.result.length === 0) {
             DataNull.style.display = "block";
             showListClassRoom.innerHTML = '<h1 id="Data__null">Không có dữ liệu</h1>';
-        } 
-        else 
-        {    
+        }
+        else {
             if (!tableBody__searchClassRoom) {
                 DataNull.style.display = "none";
                 const table = document.createElement('table');
@@ -1831,14 +1829,14 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
                 dataContainer.appendChild(table);
                 tableBody__searchClassRoom = table.querySelector('tbody');
             }
-        }  
+        }
         tableBody__searchClassRoom.innerHTML = '';
         var stt = 1;
         data.result.forEach(item => {
             const row = document.createElement('tr');
             const dateCre = new Date(item.createDate);
             const dayCre = dateCre.getDate();
-            const monthCre = dateCre.getMonth()+1;
+            const monthCre = dateCre.getMonth() + 1;
             const yearCre = dateCre.getFullYear();
             const formatDateCre = `${dayCre}-${monthCre}-${yearCre}`;
             // row.style.height = '60px';
@@ -1846,7 +1844,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
                 <td style ="width:5% ">${stt}</td>
                 <td style ="width:10%">${item.name}</td>
                 <td style ="width:10%">${formatDateCre}</td>
-                <td style ="width:30%">${item.description === 'string'?'':item.description}</td>
+                <td style ="width:30%">${item.description === 'string' ? '' : item.description}</td>
                 <td style ="width:10%">
                     <div class="hover-container">
                         <i class="fa-solid fa-screwdriver-wrench admin__fix--icon" data-id="${item.id}" onclick ="showUpdateClassRoomForm('${item.id}')" ></i>
@@ -1862,7 +1860,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
             `;
             stt++;
             tableBody__searchClassRoom.appendChild(row);
-        });     
+        });
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -1888,7 +1886,7 @@ function displayDataAndPaginationManagerClassRoom(data, currentPage) {
     // tableBody__searchClassRoom.appendChild(paginationContainer);
 }
 
-function showUpdateClassRoomForm(idItem){
+function showUpdateClassRoomForm(idItem) {
     var managementClassRoom = document.getElementById("management_classRoom");
     var updateClassRoom = document.getElementById("update_classRoom");
     var updateClassRoomForm = document.getElementById("classRoom_infor");
@@ -1899,22 +1897,22 @@ function showUpdateClassRoomForm(idItem){
     var newName = document.getElementById("name_classRoom--update")
     var newDesc = document.getElementById("desc_classRoom--update");
     // display
-    if(style.display === "none"){
+    if (style.display === "none") {
         managementClassRoom.style.display = "none";
         updateClassRoom.style.display = "block";
         updateClassRoomForm.style.display = "block";
         managementClass.style.display = "none";
     }
     // undisplay
-    else{
+    else {
         addClass.style.display = "none";
         updateClassRoomForm.style.display = "none";
         managementClassRoom.style.display = "none";
         managementClass.style.display = "none";
         updateClassRoom.style.display = "none";
-       
+
     }
-    
+
     // fill data
     const getClassRoomByIdUrl = `https://localhost:7013/api/ClassRoom/Id`;
     fetch(`${getClassRoomByIdUrl}?id=${idItem}&pageIndex=${1}&pageSize=${1}`, {
@@ -1923,86 +1921,86 @@ function showUpdateClassRoomForm(idItem){
             "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
         },
     })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
-    }
-    return response.json();
-    })
-    .then((data) => {
-        
-        if(data.statusCode === 200) {
-            // date to display
-            const classRoomName = data.result[0].name;
-            const classRoomDesc = data.result[0].description;
-            
-            newName.value = classRoomName;
-            newDesc.value = classRoomDesc;
-            
-        }
-        else {
-            alert("Sửa không thành công")
-        }
-                    
-        const token = localStorage.getItem("login");
-        buttonUpdate.addEventListener("click", () => {
-            updateDataClassRoom(idItem, token);
-            
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+
+            if (data.statusCode === 200) {
+                // date to display
+                const classRoomName = data.result[0].name;
+                const classRoomDesc = data.result[0].description;
+
+                newName.value = classRoomName;
+                newDesc.value = classRoomDesc;
+
+            }
+            else {
+                alert("Sửa không thành công")
+            }
+
+            const token = localStorage.getItem("login");
+            buttonUpdate.addEventListener("click", () => {
+                updateDataClassRoom(idItem, token);
+
+            });
+
+        })
+
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
         });
-    
-    })
-    
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
 }
 
 // update data Class
-function updateDataClassRoom(id,token){
+function updateDataClassRoom(id, token) {
     //update data
     const newName = document.getElementById("name_classRoom--update").value || 'string';
     const newDesc = document.getElementById("desc_classRoom--update").value || 'string';
-    
-    if(newName == ""){
+
+    if (newName == "") {
         alert("Vui lòng không để trống tên phòng học");
     }
     const apiUrl = `https://localhost:7013/api/ClassRoom?idroom=${id}&token=${token}`;
     fetch(apiUrl, {
-    method: 'PUT', // Sử dụng phương thức PUT để cập nhật dữ liệu
-    headers: {
-        'Content-Type': 'application/json',
-        // Các headers khác nếu cần thiết
-    },
-    body: JSON.stringify({ // Dữ liệu cập nhật
-        name: newName,
-        description: newDesc,
-    }), 
+        method: 'PUT', // Sử dụng phương thức PUT để cập nhật dữ liệu
+        headers: {
+            'Content-Type': 'application/json',
+            // Các headers khác nếu cần thiết
+        },
+        body: JSON.stringify({ // Dữ liệu cập nhật
+            name: newName,
+            description: newDesc,
+        }),
     })
-    .then((response) => {
-        if (!response.ok) {
-        throw new Error('Lỗi khi gọi API');
-        }
-        return response.json();
-    })
-    .then((responseData) => {
-        if(responseData.statusCode === 200){
-            alert("Sửa thành công");
-            showInforClassRoom();
-        }
-        else {
-            alert("Sửa không thành công")
-        }
-    })
-    .catch((error) => {
-        alert(error); // Gọi hàm callback với lỗi (nếu có)
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Lỗi khi gọi API');
+            }
+            return response.json();
+        })
+        .then((responseData) => {
+            if (responseData.statusCode === 200) {
+                alert("Sửa thành công");
+                showInforClassRoom();
+            }
+            else {
+                alert("Sửa không thành công")
+            }
+        })
+        .catch((error) => {
+            alert(error); // Gọi hàm callback với lỗi (nếu có)
+        });
 
 }
 
-function deleteInforClassRoom(id){
+function deleteInforClassRoom(id) {
     const confirmDelete = confirm("Xác nhận xóa ?");
-    if(confirmDelete){
+    if (confirmDelete) {
         const apiUrl = `https://localhost:7013/api/ClassRoom?id=${id}`;
         fetch(apiUrl, {
             method: 'DELETE',
@@ -2010,35 +2008,35 @@ function deleteInforClassRoom(id){
                 'Content-Type': 'application/json',
             },
         })
-        
-        .then((response) => {
-            if (!response.ok) {
-                alert('Xóa lớp học không thành công do đang được sử dụng');
-                throw new Error('Lỗi khi gọi API');
-                
-            }
-            return response.json();
-        })
-        .then((responseData) => {
-            if (responseData.statusCode === 200) {
-                // Xóa lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
-                alert('Lớp học đã được xóa thành công.');
-            } else {
-                // Xóa lớp học không thành công, xử lý lỗi nếu cần
-                alert('Xóa lớp học không thành công do');
-            }
-        })
-        
-        .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+
+            .then((response) => {
+                if (!response.ok) {
+                    alert('Xóa lớp học không thành công do đang được sử dụng');
+                    throw new Error('Lỗi khi gọi API');
+
+                }
+                return response.json();
+            })
+            .then((responseData) => {
+                if (responseData.statusCode === 200) {
+                    // Xóa lớp học thành công, bạn có thể thực hiện các hành động khác nếu cần
+                    alert('Lớp học đã được xóa thành công.');
+                } else {
+                    // Xóa lớp học không thành công, xử lý lỗi nếu cần
+                    alert('Xóa lớp học không thành công do');
+                }
+            })
+
+            .catch((error) => {
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
 }
-function checkClickAddClassRoom(){
-    
+function checkClickAddClassRoom() {
+
 }
-function showAddClassRoomForm(){
+function showAddClassRoomForm() {
     // display
     var addClassRoom = document.getElementById("add_classRoom");
     var addClassRoomForm = document.getElementById("classRoom_infor--add");
@@ -2048,31 +2046,31 @@ function showAddClassRoomForm(){
     var managementClass = document.getElementById("management_class");
     // button add
     var buttonAdd = document.getElementById("add__classRoom--confirm");
-    if(style.display === "none"){
+    if (style.display === "none") {
         addClassRoom.style.display = "block";
         addClassRoomForm.style.display = "block";
         managementClass.style.display = "none";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
     }
-    else{
+    else {
         managementClass.style.display = "none";
         addClassRoomForm.style.display = "block";
         managementClassRoom.style.display = "none";
         updateClass.style.display = "none";
         addClassRoom.style.display = "none";
     }
-  
+
 
 }
-function addDataForClassRoom(){
+function addDataForClassRoom() {
     // new data
     const newName = document.getElementById("name_classRoom--add").value;
     const newDesc = document.getElementById("desc_classRoom--add").value;
-    
+
     const token = localStorage.getItem("login");
     const addClassRoomUrl = `https://localhost:7013/api/ClassRoom?token=${token}`;
-    
+
     fetch(addClassRoomUrl, {
         method: 'POST',
         headers: {
@@ -2084,33 +2082,33 @@ function addDataForClassRoom(){
             description: newDesc,
         }), // Dữ liệu lớp học mới
     })
-    .then((response) => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi gọi API');
-        }
-        return response.json();
-    })
-    .then((responseData) => {
-        if (responseData.statusCode === 200) {
-            alert('Lớp học đã được thêm thành công.');
-        } else {
-            alert('Thêm lớp học không thành công.');
-        }
-    })
-    .catch((error) => {
-        // Xử lý lỗi
-        console.error(error);
-    });
-} 
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Lỗi khi gọi API');
+            }
+            return response.json();
+        })
+        .then((responseData) => {
+            if (responseData.statusCode === 200) {
+                alert('Lớp học đã được thêm thành công.');
+            } else {
+                alert('Thêm lớp học không thành công.');
+            }
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
+}
 
 // search classRoom
 let dataLoaded_searchClassRoom = false;
-let tableBody_searchClassRoom = null; 
+let tableBody_searchClassRoom = null;
 let pageIndexManagersearchClassRoom = 1;
 async function GetAllSearchDataClassRoom(pageIndex) {
     const nameClassRoomSearch = document.getElementById("seach_name_classRoom").value;
     // Gọi API ban đầu với số trang pageIndex
-    if(nameClassRoomSearch === "") {
+    if (nameClassRoomSearch === "") {
         if (!dataLoaded_searchClassRoom) {
             await fetchApiWithPageNumberManagerClassRoom(pageIndex);
             dataLoaded_searchClassRoom = true;
@@ -2128,7 +2126,7 @@ async function GetAllSearchDataClassRoom(pageIndex) {
             await fetchApiWithPageNumberSearchClassRoom(pageIndex, nameClassRoomSearch);
         }
     }
-    
+
 }
 async function fetchApiWithPageNumberSearchClassRoom(pageNumber, nameClassRoomSearch) {
     try {
@@ -2144,17 +2142,17 @@ async function fetchApiWithPageNumberSearchClassRoom(pageNumber, nameClassRoomSe
 
 //Get all schedules class
 let dataLoaded__AllSchedules = false;
-let tableBody__AllSchedules = null; 
+let tableBody__AllSchedules = null;
 let pageIndexAllSchedules = 1;
 
 let dataLoaded__searchRegisted = false;
-let tableBody__searchRegisted = null; 
+let tableBody__searchRegisted = null;
 let pageIndexSearchAccountRegisted = 1;
 async function GetAllScheduleClass(pageIndex) {
 
     const search = document.getElementById("seach_name_Schedule").value;
     // Gọi API ban đầu với số trang pageIndex
-    if(search === "") {
+    if (search === "") {
         if (!dataLoaded__AllSchedules) {
             await fetchApiWithPageNumberManagerScheduleClass(pageIndex);
             dataLoaded__AllSchedules = true;
@@ -2176,12 +2174,12 @@ async function GetAllScheduleClass(pageIndex) {
 
 
 async function fetchApiWithPageNumberManagerScheduleById(pageNumber, search) {
-    
+
     try {
         const response = await fetch(`https://localhost:7013/api/Lecture_ScheduleManager/Name?name=${search}&pageIndex=${pageNumber}&pageSize=${5}`, {
             method: 'GET',
             headers: {
-              accept: 'application/json',
+                accept: 'application/json',
             },
         });
         const data = await response.json();
@@ -2193,12 +2191,12 @@ async function fetchApiWithPageNumberManagerScheduleById(pageNumber, search) {
 }
 
 async function fetchApiWithPageNumberManagerScheduleClass(pageNumber) {
-    
+
     try {
         const response = await fetch(`https://localhost:7013/api/Lecture_ScheduleManager?pageIndex=${pageNumber}&pageSize=${9999}`, {
             method: 'GET',
             headers: {
-              accept: 'application/json',
+                accept: 'application/json',
             },
         });
         const data = await response.json();
@@ -2218,7 +2216,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
     var updateClass = document.getElementById("update_class");
     var addClass = document.getElementById("add_class");
     var ManagerDisplay = document.getElementById("dataContainer");
-    
+
     var information = document.querySelector('.information')
     var element = document.getElementById("change__information");
     var AreaSchedule = document.getElementById("Schedule");
@@ -2249,7 +2247,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
     var subjectText = document.getElementById("Subject__text");
     // //
     var DataNull = document.getElementById("ClassManager");
-    if(tableSchedule.style.display === "none"){
+    if (tableSchedule.style.display === "none") {
         //Hiển thị 
         managementSchedule.style.display = "block";
         tableSchedule.style.display = "block";
@@ -2268,7 +2266,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
         managementClass.style.display = "none";
         tableClass.style.display = "none";
         ManagerSubject.style.display = "none";
-        
+
         // Đổi màu chữ
         textColorSchedule.style.color = "#31B1DB";//
         iconDownSchedule.style.color = "#31B1DB";//
@@ -2286,7 +2284,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
         subjectIcon.style.color = "#fff";
         subjectText.style.color = "#fff";
     }
-    else{
+    else {
         managementSchedule.style.display = "block";
         managementClassRoom.style.display = "none";
         tableClassRoom.style.display = "none";
@@ -2324,9 +2322,8 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
         if (!Array.isArray(data.result) || data.result.length === 0) {
             DataNull.style.display = "block";
             showListClass.innerHTML = '<h1 id="Data__null">Không có dữ liệu</h1>';
-        } 
-        else 
-        {    
+        }
+        else {
             if (!tableBody__AllSchedules) {
                 DataNull.style.display = "none";
                 const table = document.createElement('table');
@@ -2349,7 +2346,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
                 dataContainer.appendChild(table);
                 tableBody__AllSchedules = table.querySelector('tbody');
             }
-        }  
+        }
         // tableBody__AllSchedules.innerHTML = '';
         var stt = 1;
         data.result.forEach(item => {
@@ -2367,7 +2364,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
             `;
             stt++;
             tableBody__AllSchedules.appendChild(row);
-        });     
+        });
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -2395,7 +2392,7 @@ function displayDataAndPaginationManagerScheduleClass(data, currentPage) {
 
 // check register schedules
 let dataLoaded__RegisteredSchedule = false;
-let tableBody__RegisteredSchedules = null; 
+let tableBody__RegisteredSchedules = null;
 // let pageIndexAllSchedules = 1;
 async function IsRegisteredSchedule(pageIndex) {
 
@@ -2413,20 +2410,20 @@ async function IsRegisteredSchedule(pageIndex) {
 async function fetchApiWithPageNumberRegisteredScheduleClass(pageNumber) {
     try {
         const response = await fetch(`https://localhost:7013/api/LectureSchedule/Registered_Calendar?pageIndex=${pageNumber}&pageSize=${5}&check=${1}&Name=${'string'}`, {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                },
-            });
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+            },
+        });
         const data = await response.json();
-        RegisteredSchedule( pageNumber,data);
+        RegisteredSchedule(pageNumber, data);
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
     }
-    
+
 }
-async function RegisteredSchedule( currentPage,data){
+async function RegisteredSchedule(currentPage, data) {
 
     const dataContainer = document.getElementById('Registered_Schedule_table_container');
     const showListClass = document.getElementById('ScheduleManager');
@@ -2445,7 +2442,7 @@ async function RegisteredSchedule( currentPage,data){
     var managementSchedule = document.getElementById("management_Schedule");
     var tableSchedule = document.getElementById("Schedule_table_container");
     var tableScheduleUnRegister = document.getElementById("UnRegister_Schedule_table_container");
-    
+
     // mặc định
     var textColorManagerClassRoom = document.getElementById("managerClassRoom__Text");
     var iconColorManagerClassRoom = document.getElementById("managerClassRoom__Icon");
@@ -2458,11 +2455,11 @@ async function RegisteredSchedule( currentPage,data){
 
     // //
     var DataNull = document.getElementById("ClassManager");
-    if(tableScheduleRegister.style.display === "none"){
+    if (tableScheduleRegister.style.display === "none") {
         //Hiển thị 
         managementScheduleRegister.style.display = "block";
         tableScheduleRegister.style.display = "block";
-       
+
         updateClass.style.display = "none";
         addClass.style.display = "none";
         ManagerDisplay.style.display = "none";
@@ -2483,10 +2480,10 @@ async function RegisteredSchedule( currentPage,data){
         navbarSchedulingIcon.style.color = "#fff";
         navbarSchedulingText.style.color = "#fff";
     }
-    else{
+    else {
         managementScheduleRegister.style.display = "block";
         tableScheduleRegister.style.display = "block";
-       
+
         updateClass.style.display = "none";
         addClass.style.display = "none";
         ManagerDisplay.style.display = "none";
@@ -2498,7 +2495,7 @@ async function RegisteredSchedule( currentPage,data){
         tableScheduleUnRegister.style.display = "none";
         tableSchedule.style.display = "none";
 
-  
+
         textColorManagerClassRoom.style.color = "#fff";
         iconColorManagerClassRoom.style.color = "#fff";
         textColorManagerAccount.style.color = "#fff";
@@ -2513,9 +2510,8 @@ async function RegisteredSchedule( currentPage,data){
         if (!Array.isArray(data.result) || data.result.length === 0) {
             DataNull.style.display = "block";
             showListClass.innerHTML = '<h1 id="Data__null">Không có dữ liệu</h1>';
-        } 
-        else 
-        {    
+        }
+        else {
             if (!tableBody__RegisteredSchedules) {
                 DataNull.style.display = "none";
                 const table = document.createElement('table');
@@ -2538,13 +2534,13 @@ async function RegisteredSchedule( currentPage,data){
                 dataContainer.appendChild(table);
                 tableBody__RegisteredSchedules = table.querySelector('tbody');
             }
-        }  
+        }
         tableBody__RegisteredSchedules.innerHTML = '';
         var stt = 1;
         data.result.forEach(item => {
             const row = document.createElement('tr');
 
-                // row.style.height = '60px';
+            // row.style.height = '60px';
             row.innerHTML = `
                 <td style ="width:5% ">${stt}</td>
                 <td style="width:30%">${item.course_Code === null || item.course_Code === '' ? '' : item.course_Code}</td>
@@ -2556,9 +2552,9 @@ async function RegisteredSchedule( currentPage,data){
                 <!-- Thêm các cột khác tương tự -->
             `;
             stt++;
-            tableBody__RegisteredSchedules.appendChild(row);  
-        });     
-    } 
+            tableBody__RegisteredSchedules.appendChild(row);
+        });
+    }
     catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -2566,10 +2562,10 @@ async function RegisteredSchedule( currentPage,data){
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "50%";
-    
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
+
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
         button.style.padding = "10px 10px";
@@ -2582,11 +2578,11 @@ async function RegisteredSchedule( currentPage,data){
         paginationContainer.appendChild(button);
     }
     tableBody__RegisteredSchedules.appendChild(paginationContainer);
-       
+
 }
 // check register schedules
 let dataLoaded__UnRegisteredSchedule = false;
-let tableBody__UnRegisteredSchedules = null; 
+let tableBody__UnRegisteredSchedules = null;
 // let pageIndexAllSchedules = 1;
 async function IsUnRegisteredSchedule(pageIndex) {
 
@@ -2605,20 +2601,20 @@ async function fetchApiWithPageNumberUnRegisteredScheduleClass(pageNumber) {
 
     try {
         const response = await fetch(`https://localhost:7013/api/LectureSchedule/Registered_Calendar?pageIndex=${pageNumber}&pageSize=${5}&check=${0}&Name=${'string'}`, {
-                method: 'GET',
-                headers: {
-                  accept: 'application/json',
-                },
-            });
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+            },
+        });
         const data = await response.json();
-        UnRegisteredSchedule( pageNumber,data);
+        UnRegisteredSchedule(pageNumber, data);
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
     }
-    
+
 }
-async function UnRegisteredSchedule( currentPage,data){
+async function UnRegisteredSchedule(currentPage, data) {
     const dataContainer = document.getElementById('UnRegister_Schedule_table_container');
     const showListClass = document.getElementById('ScheduleManager');
     // hiển thị
@@ -2647,7 +2643,7 @@ async function UnRegisteredSchedule( currentPage,data){
 
     // //
     var DataNull = document.getElementById("ClassManager");
-    if(tableScheduleUnRegister.style.display === "none"){
+    if (tableScheduleUnRegister.style.display === "none") {
         //Hiển thị 
         managementScheduleUnRegister.style.display = "block";
         tableScheduleUnRegister.style.display = "block";
@@ -2671,7 +2667,7 @@ async function UnRegisteredSchedule( currentPage,data){
         navbarSchedulingIcon.style.color = "#fff";
         navbarSchedulingText.style.color = "#fff";
     }
-    else{
+    else {
         // display
         managementScheduleUnRegister.style.display = "block";
         tableScheduleUnRegister.style.display = "block";
@@ -2702,9 +2698,8 @@ async function UnRegisteredSchedule( currentPage,data){
         if (!Array.isArray(data.result) || data.result.length === 0) {
             DataNull.style.display = "block";
             showListClass.innerHTML = '<h1 id="Data__null">Không có dữ liệu</h1>';
-        } 
-        else 
-        {    
+        }
+        else {
             if (!tableBody__UnRegisteredSchedules) {
                 DataNull.style.display = "none";
                 const table = document.createElement('table');
@@ -2727,13 +2722,13 @@ async function UnRegisteredSchedule( currentPage,data){
                 dataContainer.appendChild(table);
                 tableBody__UnRegisteredSchedules = table.querySelector('tbody');
             }
-        }  
+        }
         tableBody__UnRegisteredSchedules.innerHTML = '';
         var stt = 1;
         data.result.forEach(item => {
             const row = document.createElement('tr');
 
-                // row.style.height = '60px';
+            // row.style.height = '60px';
             row.innerHTML = `
                 <td style ="width:5% ">${stt}</td>
                 <td style="width:5%">${item.course_Code === null || item.course_Code === '' ? '' : item.course_Code}</td>
@@ -2745,9 +2740,9 @@ async function UnRegisteredSchedule( currentPage,data){
                 <!-- Thêm các cột khác tương tự -->
             `;
             stt++;
-            tableBody__UnRegisteredSchedules.appendChild(row);  
-        });     
-    } 
+            tableBody__UnRegisteredSchedules.appendChild(row);
+        });
+    }
     catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -2755,10 +2750,10 @@ async function UnRegisteredSchedule( currentPage,data){
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "50%";
-    
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
+
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
         button.style.padding = "10px 10px";
@@ -2771,7 +2766,7 @@ async function UnRegisteredSchedule( currentPage,data){
         paginationContainer.appendChild(button);
     }
     tableBody__UnRegisteredSchedules.appendChild(paginationContainer);
-       
+
 }
 //---------
 // Khai báo biến
@@ -2799,7 +2794,7 @@ function displayDataAndPagination(data, currentPage) {
     const DataNull = document.getElementById('accountManager__list--user');
     const tableClass = document.getElementById('select__class--item');
     const Schedule = document.getElementById('Schedule');//Schedule
-    if(tableClass.style.display === "none") {
+    if (tableClass.style.display === "none") {
         tableClass.style.display = "block";
         // Schedule.style.backgroundColor = "rgba(0,0,0,0.4)";
     }
@@ -2831,7 +2826,7 @@ function displayDataAndPagination(data, currentPage) {
         tableBody__searchClassForSchedule = table.querySelector('tbody');
     }
     else {
-        tableBody__searchClassForSchedule.innerHTML = ''; 
+        tableBody__searchClassForSchedule.innerHTML = '';
     }
 
     tableBody__searchClassForSchedule.innerHTML = '';
@@ -2843,16 +2838,16 @@ function displayDataAndPagination(data, currentPage) {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
-        const ngayThangNam =  `${day}/${month}/${year}`;
+        const ngayThangNam = `${day}/${month}/${year}`;
         row.innerHTML = `
-            <td>${stt}</td>
+            <td class="stt-column">${stt}</td>
             <td>${item.name}</td>
             <td>${ngayThangNam}</td>
             <td>${item.course === "string" ? " " : item.course}</td>
-            <td>${item.usedState === 0 ? 'Đang mở' : 'Tạm khóa' }</td>
+            <td>${item.usedState === 0 ? 'Đang mở' : 'Tạm khóa'}</td>
             <td>${item.description === "string" ? " " : item.description}</td>
             <td>
-                <button style = "padding: 8px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdClass('${item.id}', this)">Chọn</button>
+                <button style = "padding: 4px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdClass('${item.id}', this)">Chọn</button>
             </td>
         `;
         stt++;
@@ -2861,9 +2856,12 @@ function displayDataAndPagination(data, currentPage) {
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "60%";
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
+    // paginationContainer.style.margin = "20px 20px";
+    // paginationContainer.style.position = "absolute";
+    // paginationContainer.style.left = "60%";
 
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
@@ -2916,7 +2914,7 @@ function GetIdClass(itemId, button) {
 
 function AddListIdClassOk() {
     const Save = document.getElementById("select__class--item");
-    if(selectedClass.length === 0) {
+    if (selectedClass.length === 0) {
         alert("Chưa có lớp học nào được thêm");
     }
     else {
@@ -2942,7 +2940,7 @@ let pageIndexClassRoomForSchedule = 1;
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberClassRoom(pageNumber) {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/ClassRoom?pageIndex=${pageNumber}&pageSize=${5}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
@@ -2960,7 +2958,7 @@ function displayDataAndPaginationClassRoom(data, currentPage) {
     const DataNull = document.getElementById('accountManager__list--user');
     const tableClass = document.getElementById('select__classroom--item');
     const Schedule = document.getElementById('Schedule');//Schedule
-    if(tableClass.style.display === "none") {
+    if (tableClass.style.display === "none") {
         tableClass.style.display = "block";
     }
     else {
@@ -2987,7 +2985,7 @@ function displayDataAndPaginationClassRoom(data, currentPage) {
         tableBody__searchClassRoomForSchedule = table.querySelector('tbody');
     }
     else {
-        tableBody__searchClassRoomForSchedule.innerHTML = ''; 
+        tableBody__searchClassRoomForSchedule.innerHTML = '';
     }
 
     tableBody__searchClassRoomForSchedule.innerHTML = '';
@@ -2998,9 +2996,9 @@ function displayDataAndPaginationClassRoom(data, currentPage) {
         row.innerHTML = `
             <td>${stt}</td>
             <td>${item.name}</td>
-            <td>${item.description === "string" ? " " : item.description}</td>
+            <td class="description-cell" onclick="toggleDescription(this)">${item.description === "string" ? " " : item.description}</td>
             <td>
-                <button style = "padding: 8px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdClassRoom('${item.id}', this)">Chọn</button>
+                <button style = "padding: 4px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdClassRoom('${item.id}', this)">Chọn</button>
             </td>
         `;
         stt++;
@@ -3009,9 +3007,9 @@ function displayDataAndPaginationClassRoom(data, currentPage) {
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "60%";
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
 
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
@@ -3062,7 +3060,7 @@ function GetIdClassRoom(itemId, button) {
 
 function AddListIdClassRoomOk() {
     const Save = document.getElementById("select__classroom--item");
-    if(selectedClassRoom.length === 0) {
+    if (selectedClassRoom.length === 0) {
         alert("Chưa có lớp học nào được thêm");
     }
     else {
@@ -3089,7 +3087,7 @@ let pageIndexSubjectForSchedule = 1;
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberSubject(pageNumber) {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/Subject?pageIndex=${pageNumber}&pageSize=${5}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
@@ -3107,7 +3105,7 @@ function displayDataAndPaginationSubject(data, currentPage) {
     const DataNull = document.getElementById('accountManager__list--user');
     const tableClass = document.getElementById('select__subject--item');
     const Schedule = document.getElementById('Schedule');//Schedule
-    if(tableClass.style.display === "none") {
+    if (tableClass.style.display === "none") {
         tableClass.style.display = "block";
     }
     else {
@@ -3135,7 +3133,7 @@ function displayDataAndPaginationSubject(data, currentPage) {
         tableBody__searchSubjectForSchedule = table.querySelector('tbody');
     }
     else {
-        tableBody__searchSubjectForSchedule.innerHTML = ''; 
+        tableBody__searchSubjectForSchedule.innerHTML = '';
     }
 
     tableBody__searchSubjectForSchedule.innerHTML = '';
@@ -3149,7 +3147,7 @@ function displayDataAndPaginationSubject(data, currentPage) {
             <td>${item.name}</td>
             <td>${item.credits}</td>
             <td>
-                <button style = "padding: 8px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdSubject('${item.id}', this)">Chọn</button>
+                <button style = "padding: 4px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdSubject('${item.id}', this)">Chọn</button>
             </td>
         `;
         stt++;
@@ -3158,9 +3156,9 @@ function displayDataAndPaginationSubject(data, currentPage) {
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "60%";
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
 
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
@@ -3214,7 +3212,7 @@ function GetIdSubject(itemId, button) {
 
 function AddListIdSubjectOk() {
     const Save = document.getElementById("select__subject--item");
-    if(selectedSubject.length === 0) {
+    if (selectedSubject.length === 0) {
         alert("Chưa có lớp học nào được thêm");
     }
     else {
@@ -3233,28 +3231,28 @@ function CloseSelectSubject() {
 
 function Lecture_Schedule() {
     const changeInforUrl = "https://localhost:7013/api/Lecture_ScheduleManager/Scheduling";
-    const dateStart = document.getElementById("startDate").value; 
-    const dateEnd = document.getElementById("endDate").value; 
-    if(selectedClass.length === 0 ) {
+    const dateStart = document.getElementById("startDate").value;
+    const dateEnd = document.getElementById("endDate").value;
+    if (selectedClass.length === 0) {
         alert("Bạn chưa chọn lớp học!");
     }
-    else if(selectedClassRoom.length === 0) {
+    else if (selectedClassRoom.length === 0) {
         alert("Bạn chưa chọn phòng học");
     }
-    else if(selectedSubject.length === 0 ) {
+    else if (selectedSubject.length === 0) {
         alert("Bạn chưa chọn môn học");
     }
-    else if(dateStart === "") {
+    else if (dateStart === "") {
         alert("Bạn chưa chọn ngày bắt đầu")
     }
-    else if(dateEnd === "") {
+    else if (dateEnd === "") {
         alert("Bạn chưa chọn ngày kết thúc")
     }
     else {
-        fetch(changeInforUrl, { 
+        fetch(changeInforUrl, {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 dateStart: dateStart + 'T03:31:35.895Z',
@@ -3264,27 +3262,27 @@ function Lecture_Schedule() {
                 idsubjects: selectedSubject,
             }),
         })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Lỗi khi gọi API");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            alert(data.result);
-            if(data.statusCode === 200) {
-                GetAllNotUserForSchedule(1);
-            }
-            selectedClass = [];
-            selectedClassRoom = [];
-            selectedSubject = [];
-        })
-        .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Lỗi khi gọi API");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                alert(data.result);
+                if (data.statusCode === 200) {
+                    GetAllNotUserForSchedule(1);
+                }
+                selectedClass = [];
+                selectedClassRoom = [];
+                selectedSubject = [];
+            })
+            .catch((error) => {
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
-    
+
 }
 
 
@@ -3345,7 +3343,7 @@ function displayDataAndPaginationNotUser(data, currentPage) {
         tableBody__searchNotUserForSchedule = table.querySelector('tbody');
     }
     else {
-        tableBody__searchNotUserForSchedule.innerHTML = ''; 
+        tableBody__searchNotUserForSchedule.innerHTML = '';
     }
 
     tableBody__searchNotUserForSchedule.innerHTML = '';
@@ -3362,7 +3360,7 @@ function displayDataAndPaginationNotUser(data, currentPage) {
             <td>${item.monHoc}</td>
             <td>${item.lichHocTongList}</td>
             <td>
-                <button style = "padding: 8px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdSubject('${item.id}', this)">Chọn</button>
+                <button style = "padding: 4px; background-color: #3399CC; cursor: pointer; color: #fff;cursor: pointer;" onclick="GetIdSubject('${item.id}', this)">Chọn</button>
             </td>
         `;
         stt++;
@@ -3425,17 +3423,17 @@ function GetIdNotUser(itemId, button) {
 
 // Manager Subject
 let dataLoadedSubject = false;
-let tableBodySubject = null; 
+let tableBodySubject = null;
 let pageIndexManagerSubject = 1;
 
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberManagerSubject() {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/Subject?pageIndex=${1}&pageSize=${9999}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
-        displayDataAndPaginationManagerSubject(data );
+        displayDataAndPaginationManagerSubject(data);
     } catch (error) {
         console.error('Error fetching data:', error);
         alert(error);
@@ -3468,7 +3466,7 @@ function displayDataAndPaginationManagerSubject(data, currentPage) {
         tableBodySubject = table.querySelector('tbody');
     }
     else {
-        tableBodySubject.innerHTML = ''; 
+        tableBodySubject.innerHTML = '';
     }
 
     tableBodySubject.innerHTML = '';
@@ -3540,13 +3538,13 @@ async function GetAllManagerSubjectForSchedule(pageIndex) {
 // Search Account
 
 let dataLoaded__searchSubject = false;
-let tableBody__searchSubject = null; 
+let tableBody__searchSubject = null;
 let pageIndexSearchAccountSubject = 1;
 
 // Gọi API với số trang được truyền vào
 async function fetchApiWithPageNumberSearchSubject(pageNumber, userId) {
     try {
-        
+
         const getAccountUrl = `https://localhost:7013/api/Subject/Id?Id=${userId}&pageIndex=${1}&pageSize=${999}`;
         const response = await fetch(getAccountUrl);
         const data = await response.json();
@@ -3585,7 +3583,7 @@ function displayDataAndPaginationSearchSubject(data, currentPage) {
         tableBodySubject = table.querySelector('tbody');
     }
     else {
-        tableBodySubject.innerHTML = ''; 
+        tableBodySubject.innerHTML = '';
     }
 
     tableBodySubject.innerHTML = '';
@@ -3619,9 +3617,9 @@ function displayDataAndPaginationSearchSubject(data, currentPage) {
 
     // Tạo và gắn sự kiện cho các nút phân trang
     const paginationContainer = document.createElement("div");
-    paginationContainer.style.margin = "20px 20px";
-    paginationContainer.style.position = "absolute";
-    paginationContainer.style.left = "50%";
+    paginationContainer.classList.add("my-3");
+    paginationContainer.classList.add("d-flex");
+    paginationContainer.classList.add("justify-content-end");
 
     for (let i = 1; i <= Math.ceil(data.totalRecords / 5); i++) {
         const button = document.createElement("button");
@@ -3685,7 +3683,7 @@ async function GetAllSearchSubjectForSchedule(pageIndex) {
     var subjectText = document.getElementById("Subject__text");
     var ManagerAccIcon = document.getElementById("managerAcount__Icon");
 
-    if(ManagerSubject.style.display === "none") {
+    if (ManagerSubject.style.display === "none") {
         ManagerSubject.style.display = "block";
         managementClassRoom.style.display = "none";
         tableClassRoom.style.display = "none";
@@ -3703,15 +3701,15 @@ async function GetAllSearchSubjectForSchedule(pageIndex) {
         tableScheduleRegister.style.display = "none";
         tableScheduleUnRegister.style.display = "none";
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
-        textColorManagerClass.style.color = "#fff" ;
-        iconDownClass.style.color = "#fff" ;
+        textColorManagerClass.style.color = "#fff";
+        iconDownClass.style.color = "#fff";
 
-        colorTextManagerAccount__Icon.style.color = "#fff" ;
+        colorTextManagerAccount__Icon.style.color = "#fff";
         colorTextManagerAccount.style.color = "#fff";
 
         navbarSchedulingIcon.style.color = "#fff";
@@ -3740,27 +3738,27 @@ async function GetAllSearchSubjectForSchedule(pageIndex) {
         tableScheduleRegister.style.display = "none";
         tableScheduleUnRegister.style.display = "none";
         colorText.style.color = "#fff";
-        icon.style.color = "#fff"; 
-        colorTextChangeInfro__Icon.style.color = "#fff" ;
+        icon.style.color = "#fff";
+        colorTextChangeInfro__Icon.style.color = "#fff";
         colorTextChangeInfro.style.color = "#fff";
-        colorTextChangePassword__Icon.style.color = "#fff" ;
+        colorTextChangePassword__Icon.style.color = "#fff";
         colorTextChangePassword.style.color = "#fff";
 
-        colorTextManagerAccount__Icon.style.color = "#fff" ;
+        colorTextManagerAccount__Icon.style.color = "#fff";
         colorTextManagerAccount.style.color = "#fff";
 
         navbarSchedulingIcon.style.color = "#fff";
         navbarSchedulingText.style.color = "#fff";
         ManagerAccIcon.style.color = "#fff";
-        textColorManagerClass.style.color = "#fff" ;
-        iconDownClass.style.color = "#fff" ;
+        textColorManagerClass.style.color = "#fff";
+        iconDownClass.style.color = "#fff";
         textColorManagerClassRoom.style.color = "#fff";
         iconColorManagerClassRoom.style.color = "#fff";
 
     }
-    
+
     // Gọi API ban đầu với số trang pageIndex
-    if(userId === "" || userId === null || userId === undefined) {
+    if (userId === "" || userId === null || userId === undefined) {
         if (!dataLoaded) {
             await fetchApiWithPageNumberManagerSubject(pageIndex);
             dataLoaded = true;
@@ -3778,19 +3776,19 @@ async function GetAllSearchSubjectForSchedule(pageIndex) {
             await fetchApiWithPageNumberSearchSubject(pageIndex, userId);
         }
     }
-    
+
 }
 
 
 // Change Subjects
 
-function ShowChangeSubject( id ,CourseCode, name, credits, description) {
-    const Course_Code = document.getElementById("Change_CourseCode--admin"); 
-    const Name = document.getElementById("Change_Name--admin"); 
-    const Credits = document.getElementById("Change_Credits--admin"); 
-    const Description = document.getElementById("Change_Description--admin"); 
-    const ShowAdminChangeUser = document.getElementById("Admin__change--subjects"); 
-    if(ShowAdminChangeUser.style.display === "none") {
+function ShowChangeSubject(id, CourseCode, name, credits, description) {
+    const Course_Code = document.getElementById("Change_CourseCode--admin");
+    const Name = document.getElementById("Change_Name--admin");
+    const Credits = document.getElementById("Change_Credits--admin");
+    const Description = document.getElementById("Change_Description--admin");
+    const ShowAdminChangeUser = document.getElementById("Admin__change--subjects");
+    if (ShowAdminChangeUser.style.display === "none") {
         ShowAdminChangeUser.style.display = "block";
     }
     else {
@@ -3813,10 +3811,10 @@ function ShowChangeSubject( id ,CourseCode, name, credits, description) {
 // Change subject
 function AdminChangeSubject() {
     const changeInforUrl = "https://localhost:7013/api/Subject";
-    const Course_Code = document.getElementById("Change_CourseCode--admin").value; 
-    const Name = document.getElementById("Change_Name--admin").value; 
-    const Credits = parseInt(document.getElementById("Change_Credits--admin").value); 
-    const Description = document.getElementById("Change_Description--admin").value; 
+    const Course_Code = document.getElementById("Change_CourseCode--admin").value;
+    const Name = document.getElementById("Change_Name--admin").value;
+    const Credits = parseInt(document.getElementById("Change_Credits--admin").value);
+    const Description = document.getElementById("Change_Description--admin").value;
     const ShowAdminChangeUser = document.getElementById("Admin__change--subjects");
     const id = localStorage.getItem("IdSubject");
     var today = new Date();
@@ -3828,76 +3826,76 @@ function AdminChangeSubject() {
     // Xây dựng chuỗi với định dạng "yyyy-mm-dd"
     var formattedDate = yyyy + '-' + mm + '-' + dd;
 
-      // Gửi request change infor user
+    // Gửi request change infor user
     fetch(`${changeInforUrl}?id=${id}&token=${localStorage.getItem("login")}`, {
-    method: "PUT",
-    headers: {
-        "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
-    },
-    body: JSON.stringify({
-        course_code: Course_Code,
-        name: Name,
-        credits: Credits,
-        dateStart: formattedDate + "T14:13:09.140Z",
-        dateEnd: formattedDate + "T14:13:09.140Z",
-        description: Description,
-    }),
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
+        },
+        body: JSON.stringify({
+            course_code: Course_Code,
+            name: Name,
+            credits: Credits,
+            dateStart: formattedDate + "T14:13:09.140Z",
+            dateEnd: formattedDate + "T14:13:09.140Z",
+            description: Description,
+        }),
     })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
-    }
-    return response.json();
-    })
-    .then((data) => {
-        localStorage.removeItem("IdSubject");
-        console.log(data);
-        if(data.statusCode === 200) {
-            alert("Sửa thành công");
-            if(ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
-            else ShowAdminChangeUser.style.display = "none";
-            GetAllSearchSubjectForSchedule(1);
-        }
-        else {
-            alert("Sửa không thành công")
-        }
-    
-    })
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            localStorage.removeItem("IdSubject");
+            console.log(data);
+            if (data.statusCode === 200) {
+                alert("Sửa thành công");
+                if (ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
+                else ShowAdminChangeUser.style.display = "none";
+                GetAllSearchSubjectForSchedule(1);
+            }
+            else {
+                alert("Sửa không thành công")
+            }
+
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
 }
 // Delete subjects
 function AdminDeleteSubject(id) {
     const changeInforUrl = "https://localhost:7013/api/Subject";
-    if(window.confirm("Bạn có chắc muốn xóa không")) {
+    if (window.confirm("Bạn có chắc muốn xóa không")) {
         fetch(`${changeInforUrl}?id=${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
             },
-            })
+        })
             .then((response) => {
-            if (!response.ok) {
-                throw new Error("Lỗi khi gọi API");
-            }
-            return response.json();
+                if (!response.ok) {
+                    throw new Error("Lỗi khi gọi API");
+                }
+                return response.json();
             })
             .then((data) => {
-                if(data.statusCode === 200) {
+                if (data.statusCode === 200) {
                     alert(data.result);
                     GetAllSearchSubjectForSchedule(1);
                 }
                 else {
                     alert("Sửa không thành công")
                 }
-            
+
             })
             .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-        });
+                // Xử lý lỗi
+                console.error(error);
+            });
     }
     else {
         alert("Xóa thất bại");
@@ -3908,10 +3906,10 @@ function AdminDeleteSubject(id) {
 
 function AdminAddSubject() {
     const changeInforUrl = "https://localhost:7013/api/Subject";
-    const Course_Code = document.getElementById("add_CourseCode--admin").value; 
-    const Name = document.getElementById("add_Name--admin").value; 
-    const Credits = parseInt(document.getElementById("add_Credits--admin").value); 
-    const Description = document.getElementById("add_Description--admin").value; 
+    const Course_Code = document.getElementById("add_CourseCode--admin").value;
+    const Name = document.getElementById("add_Name--admin").value;
+    const Credits = parseInt(document.getElementById("add_Credits--admin").value);
+    const Description = document.getElementById("add_Description--admin").value;
     const ShowAdminChangeUser = document.getElementById("Admin__add--subjects");
     var today = new Date();
     // Lấy ngày, tháng và năm
@@ -3921,40 +3919,59 @@ function AdminAddSubject() {
 
     // Xây dựng chuỗi với định dạng "yyyy-mm-dd"
     var formattedDate = yyyy + '-' + mm + '-' + dd;
-      // Gửi request change infor user
+    // Gửi request change infor user
     fetch(`${changeInforUrl}?token=${localStorage.getItem("login")}`, {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
-    },
-    body: JSON.stringify({
-        course_code: Course_Code,
-        name: Name,
-        credits: Credits,
-        dateStart: formattedDate + "T14:13:09.140Z",
-        dateEnd: formattedDate + "T14:13:09.140Z",
-        description: Description,
-    }),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json", // Đặt Content-Type tùy theo yêu cầu của API
+        },
+        body: JSON.stringify({
+            course_code: Course_Code,
+            name: Name,
+            credits: Credits,
+            dateStart: formattedDate + "T14:13:09.140Z",
+            dateEnd: formattedDate + "T14:13:09.140Z",
+            description: Description,
+        }),
     })
-    .then((response) => {
-    if (!response.ok) {
-        throw new Error("Lỗi khi gọi API");
-    }
-    return response.json();
-    })
-    .then((data) => {
-        if(data.statusCode === 200) {
-            alert("Thêm thành công");
-            if(ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
-            else ShowAdminChangeUser.style.display = "none";
-        }
-        else {
-            alert("Thêm không thành công")
-        }
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Lỗi khi gọi API");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.statusCode === 200) {
+                alert("Thêm thành công");
+                if (ShowAdminChangeUser.style.display === "block") ShowAdminChangeUser.style.display = "none";
+                else ShowAdminChangeUser.style.display = "none";
+            }
+            else {
+                alert("Thêm không thành công")
+            }
+
+        })
+        .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+        });
+}
+
+function toggleDescription(element) {
+    element.classList.toggle('expanded');
+}
+document.querySelector('.bar_icon').addEventListener('click', function() {
     
-    })
-    .catch((error) => {
-    // Xử lý lỗi
-    console.error(error);
-    });
+    alert("abc")
+});
+function toggleNavbar(){
+    var navbar = document.querySelector('.navbar_container');
+    navbar.classList.toggle('active');
+
+    var leftSide = document.querySelector('.container_left_side');
+    if (leftSide.classList.contains('d-none')) {
+        leftSide.classList.remove('d-none');
+    } else {
+        leftSide.classList.add('d-none');
+    }
 }

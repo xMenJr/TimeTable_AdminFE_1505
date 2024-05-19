@@ -577,3 +577,4 @@ function CloseAdminAddSubject() {
     const ShowAdminChangeUser = document.getElementById("Admin__add--subjects");
     ShowAdminChangeUser.style.display = "none";
 }
+
